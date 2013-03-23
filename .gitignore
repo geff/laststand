@@ -8,4 +8,4 @@
 *.sln
 
 Unity.userprefs
-Assembly-CSharp.pidb
+Assembly-CSharp*.pidb
