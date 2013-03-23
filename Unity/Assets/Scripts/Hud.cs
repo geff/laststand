@@ -3,16 +3,22 @@ using System.Collections;
 
 public class Hud : MonoBehaviour
 {
-	public Texture2D skillPicture;
-
-	// Use this for initialization
-	void Start ()
-	{
 	
-	}
-
-		void OnGUI ()
-		{
-			GUI.Label (new Rect (0,0,100,50), skillPicture);
+	private GUISkill[] skills {
+		get {
+			if(null == _skills) {
+				_skills = GetComponents<GUISkill>();
+			}
+			return _skills;
 		}
+	}
+	
+	private GUISkill[] _skills = null;
+	
+	void OnGUI () {
+		foreach(GUISkill skill in skills) {
+			Debug.Log("Blorg");
+			skill.display();
+		}
+	}
 }
