@@ -130,6 +130,10 @@ public class GameState : MonoBehaviour
 	/// </summary>
 	IEnumerator SpawnPlayer()
 	{
+		if (Network.isClient)
+		{
+			this.transform.position += new Vector3(Random.Range(-10, +10)*10.0f, 0.0f, 5.0f);
+		}
 		Transform spawn = this.transform;
 		// TODO get the correct spawn position
 

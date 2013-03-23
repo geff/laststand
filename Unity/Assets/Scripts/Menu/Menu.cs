@@ -164,7 +164,7 @@ public class Menu : MonoBehaviour
 			{
 				// Start a server for playerMaxNumber clients using the "connectPort" given via the GUI
                 bool useNat = !Network.HavePublicAddress();
-                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 1, 8) - 1, nConnectPort, useNat);
+                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
 
                 if (string.IsNullOrEmpty(this.sGameName))
                 {
@@ -356,7 +356,7 @@ public class Menu : MonoBehaviour
 					// Don't allow any more players
         			Network.maxConnections = -1;
 					// Unregister to prevent new players from coming
-					MasterServer.UnregisterHost();
+//					MasterServer.UnregisterHost();
 					// Disable menu
 					this.state = MenuState.None;
 					// Start level
