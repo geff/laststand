@@ -35,7 +35,7 @@ public class GameContext : MonoBehaviour
 	void Awake()
 	{
         // Initialize the master server
-#if true
+#if false
         MasterServer.ipAddress = GameContext.MASTER_SERVER_IP_ADDRESS;
         MasterServer.port = GameContext.MASTER_SERVER_PORT;
         Network.natFacilitatorIP = GameContext.MASTER_SERVER_IP_ADDRESS;
