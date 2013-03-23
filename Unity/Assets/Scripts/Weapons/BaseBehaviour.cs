@@ -22,7 +22,7 @@ public class BaseBehaviour : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        other.transform.root.rigidbody.AddForce(myTransform.forward * 100000);
+        other.transform.root.rigidbody.AddForce(myTransform.forward * 50000);
         Destroy(gameObject);
     }
 }

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class VehicleTurret : MonoBehaviour {
 
-    public MonoBehaviour BaseShoot;
-
     private Transform myTransform;
 
 	// Use this for initialization
