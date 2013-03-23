@@ -11,6 +11,7 @@ public abstract class BaseCapacity : MonoBehaviour
     public float LastActivity;
     public string Key;
     public string CapacityName;
+	public Texture2D GUIPicture;
 
     //[HideInInspector]
     public VehicleController ParentVehicle;
