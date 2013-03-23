@@ -16,6 +16,7 @@ public class GUISkill : MonoBehaviour {
 	
 	public GUISkill setLinkedCapa(BaseCapacity capa) {
 		this.capa = capa;
+		return this;
 	}
 	
 }
