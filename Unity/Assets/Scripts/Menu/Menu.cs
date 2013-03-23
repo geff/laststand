@@ -163,7 +163,7 @@ public class Menu : MonoBehaviour
 			if (this.nConnectPort > 0 && this.nMaxPlayerNumber > 1 && GUILayout.Button("Create!"))
 			{
 				// Start a server for playerMaxNumber clients using the "connectPort" given via the GUI
-                bool useNat = !Network.HavePublicAddress();
+//                bool useNat = !Network.HavePublicAddress();
                 NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
 
                 if (string.IsNullOrEmpty(this.sGameName))
@@ -331,7 +331,22 @@ public class Menu : MonoBehaviour
 			this.m_context.player.ready = true;
 
 			// Get the prefab
-			this.m_context.player.playerTank = (GameObject) Resources.Load("VehiclePrefab");
+			VehicleController playerTank = null;
+			switch (this.m_context.player.lastTankType)
+			{
+			case TankType.Light:
+				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().lightTank;
+				break;
+
+			case TankType.Medium:
+				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().mediumTank;
+				break;
+
+			case TankType.Heavy:
+				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().heavyTank;
+				break;
+			}
+			this.m_context.player.playerTank = playerTank;
 		}
 	}
 
