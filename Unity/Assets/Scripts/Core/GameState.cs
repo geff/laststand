@@ -148,6 +148,9 @@ public class GameState : MonoBehaviour
 
             playerTank.networkView.RPC("InitializeController", RPCMode.Others, Network.player);
 			playerTank.GetComponent<VehicleController>().InitializeController(Network.player);
+
+			// Setup camera
+			Camera.main.GetComponent<SmoothFollow>().target = playerTank.transform;
 		}
 		else
 		{
