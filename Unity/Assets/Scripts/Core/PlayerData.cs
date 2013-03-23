@@ -11,7 +11,12 @@ public class PlayerData
 	#region In-Game Properties
 	public NetworkPlayer networkPlayer;
 	public int playerID;
+	public TankType lastTankType;
 	#endregion // In-Game Properties
+
+	#region Out-Game Properties
+	public bool ready;
+	#endregion // Out-Game Properties
 
 	public bool isValid
 	{
@@ -27,6 +32,7 @@ public class PlayerData
 	{
 		this.username = "Anonymous";
 		this.playerID = PlayerData.INVALID_ID;
+		this.ready = false;
 	}
 
 	#region System.Object overrides

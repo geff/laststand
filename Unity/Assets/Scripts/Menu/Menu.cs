@@ -7,31 +7,49 @@ public enum MenuState
 	Login,
 	MainMenu,
 	HostGame,
-	JoinGame
+	JoinGame,
+	SelectTank,
+	StartOrWait,
 }
 
 public class Menu : MonoBehaviour
 {
 	public MenuState state = MenuState.None;
 
+	private GameContext m_context;
+
 	#region Login
-	public string username;
+	string sUsername = "";
 	#endregion // Login
 
 	#region Host
-	public int connectPort;
-	public int maxPlayerNumber;
-	public string gameName;
+	int nConnectPort = 8888;
+	int nMaxPlayerNumber = 8;
+	string sGameName = "";
 	#endregion // Host
 
 	#region Join
-	#endregion // Host
+	bool bManualJoin = false;
+	string sConnectToIP = "127.0.0.1";
+	bool bShowOkButton = false;
+	HostData selectedHost = null;
+	float fTimeSinceLastListLoad;
+	Vector2 scrollViewVector;
+	#endregion // Join
+
+	#region Select Tank
+	bool bSelected = false;
+	int nTankID = -1;
+	#endregion // Select Tank
 
 	void Awake()
 	{
-		this.username = "";
+		this.sUsername = "";
+		// Get the game context and cache the reference
+		this.m_context = GameSingleton.Instance.context;
 	}
 
+	#region GUI
 	void OnGUI()
 	{
 		switch (this.state)
@@ -51,6 +69,14 @@ public class Menu : MonoBehaviour
 		case MenuState.JoinGame:
 			Menu_Join();
 			break;
+
+		case MenuState.SelectTank:
+			Menu_SelectTank();
+			break;
+
+		case MenuState.StartOrWait:
+			Menu_StartOrWait();
+			break;
 		default:
 			break;
 		}
@@ -65,13 +91,19 @@ public class Menu : MonoBehaviour
 
 		GUILayout.BeginHorizontal();
         GUILayout.Label("User name");
-        this.username = GUILayout.TextField(this.username, 25, GUILayout.MinWidth(125));
+        this.sUsername = GUILayout.TextField(this.sUsername, 25, GUILayout.MinWidth(125));
 		GUILayout.EndHorizontal();
 
-        if (this.username.Length != 0)
+        if (this.sUsername.Length != 0)
         {
             if (GUILayout.Button("Ok"))
             {
+				// Create the player
+				PlayerData player = new PlayerData();
+				player.username = this.sUsername;
+				// Give it to the game context
+				this.m_context.tempPlayer = player;
+				// Goto main menu
 				this.state = MenuState.MainMenu;
             }
         }
@@ -88,14 +120,17 @@ public class Menu : MonoBehaviour
         GUILayout.Label("-- Main Menu --");
         if (GUILayout.Button("Create Game"))
         {
+			// Go to host menu
 			this.state = MenuState.HostGame;
         }
         if (GUILayout.Button("Join Game"))
         {
+			// Go to join menu
 			this.state = MenuState.JoinGame;
         }
 		if (GUILayout.Button("<< Back"))
 		{
+			// Go back to login
 			this.state = MenuState.Login;
 		}
 
@@ -114,33 +149,36 @@ public class Menu : MonoBehaviour
 
 			GUILayout.BeginHorizontal();
 	        GUILayout.Label("Server Port");
-	        this.connectPort = int.Parse(GUILayout.TextField(this.connectPort.ToString(), 25, GUILayout.MinWidth(125)));
+	        this.nConnectPort = int.Parse(GUILayout.TextField(this.nConnectPort.ToString(), 25, GUILayout.MinWidth(125)));
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 	        GUILayout.Label("Max Players Nb");
-	        this.maxPlayerNumber = int.Parse(GUILayout.TextField(this.maxPlayerNumber.ToString(), 25, GUILayout.MinWidth(125)));
+	        this.nMaxPlayerNumber = int.Parse(GUILayout.TextField(this.nMaxPlayerNumber.ToString(), 25, GUILayout.MinWidth(125)));
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 	        GUILayout.Label("Game Name");
-	        this.gameName = GUILayout.TextField(this.gameName, 25, GUILayout.MinWidth(125));
+	        this.sGameName = GUILayout.TextField(this.sGameName, 25, GUILayout.MinWidth(125));
 			GUILayout.EndHorizontal();
 
-			if (this.connectPort > 0 && this.maxPlayerNumber > 1 && GUILayout.Button("Create!"))
+			if (this.nConnectPort > 0 && this.nMaxPlayerNumber > 1 && GUILayout.Button("Create!"))
 			{
 				// Start a server for playerMaxNumber clients using the "connectPort" given via the GUI
                 bool useNat = !Network.HavePublicAddress();
-                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.maxPlayerNumber, 1, 8) - 1, connectPort, useNat);
+                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 1, 8) - 1, nConnectPort, useNat);
 
-                if (string.IsNullOrEmpty(this.gameName))
+                if (string.IsNullOrEmpty(this.sGameName))
                 {
-                    this.gameName = "Unnamed";
+                    this.sGameName = "Unnamed";
                 }
-                MasterServer.RegisterHost( GameContext.GAME_TYPE_NAME, this.gameName);
+                MasterServer.RegisterHost( GameContext.GAME_TYPE_NAME, this.sGameName);
                 Debug.Log("Try to host :" + error);
+				// Goto select tank
+				this.state = MenuState.SelectTank;
 			}
 
 			if (GUILayout.Button("<< Back"))
 			{
+				// Go back to main menu
 				this.state = MenuState.MainMenu;
 			}
 
@@ -155,18 +193,183 @@ public class Menu : MonoBehaviour
 
 	void Menu_Join()
 	{
-		GUILayout.BeginVertical();
-		GUILayout.FlexibleSpace();
+        if (Network.peerType == NetworkPeerType.Disconnected)
+        {
+			GUILayout.BeginVertical();
+			GUILayout.FlexibleSpace();
+	
+	        GUILayout.Label("-- Join Game --");
 
-        GUILayout.Label("-- Join Game --");
+			if (GUILayout.Button("Manual settings"))
+			{
+				this.bManualJoin = !this.bManualJoin;
 
-		if (GUILayout.Button("<< Back"))
+				if (!bManualJoin)
+				{
+                    MasterServer.RequestHostList(GameContext.GAME_TYPE_NAME);
+				}
+			}
+
+			if (bManualJoin)
+			{
+				GUILayout.BeginHorizontal();
+				GUILayout.Label("ip: ");
+				this.sConnectToIP = GUILayout.TextField(this.sConnectToIP);
+				GUILayout.EndHorizontal();
+
+				GUILayout.BeginHorizontal();
+				GUILayout.Label("port: ");
+				this.nConnectPort = int.Parse(GUILayout.TextField(this.nConnectPort.ToString()));
+				GUILayout.EndHorizontal();
+
+                if (GUILayout.Button("OK"))
+                {
+					// Connect to the "connectToIP" and "connectPort" as entered via the GUI
+                    NetworkConnectionError error = Network.Connect(sConnectToIP, nConnectPort);
+                    Debug.Log("Try to join :" + error);
+                }
+            }
+            else
+            {
+                // refresh list if it is stalled (more than 10 seconds old)
+                if ((Time.time - fTimeSinceLastListLoad) > 10.0f)
+                {
+                    fTimeSinceLastListLoad = Time.time;
+                    MasterServer.ClearHostList();
+                    MasterServer.RequestHostList(GameContext.GAME_TYPE_NAME);
+                }
+
+	            // Existing hosted games list
+            	GUILayout.Label("Liste des parties");
+				int nbGame = MasterServer.PollHostList().Length;
+                if (nbGame != 0)
+                {
+				 	this.scrollViewVector = GUILayout.BeginScrollView(scrollViewVector);
+					int index = 0;
+                    foreach (HostData hostData in MasterServer.PollHostList())
+                    {
+						string buttonContent = hostData.gameName +"\n" +
+							"["+ hostData.connectedPlayers +"/"+(hostData.playerLimit-1).ToString()+"]";
+
+						if(GUILayout.Button(buttonContent))
+						{
+                            bShowOkButton = true;
+                            selectedHost = hostData;
+						}
+						index++;
+					}
+					GUILayout.EndScrollView();
+					
+
+				}
+				//refresh button
+                if (GUILayout.Button("Refresh Host List"))
+                {
+                    MasterServer.ClearHostList();
+                    MasterServer.RequestHostList(GameContext.GAME_TYPE_NAME);
+                    bShowOkButton = false;
+                }
+				
+	            // Selected game
+				if (selectedHost != null)
+				{
+				}
+
+				// Join button
+                if (bShowOkButton && GUILayout.Button("OK"))
+                {
+                    // Connect to the "connectToIP" and "connectPort" as entered via the GUI
+                    NetworkConnectionError error = Network.Connect(selectedHost);
+                    Debug.Log("Try to join :" + error);
+					// Goto select tank
+					this.state = MenuState.SelectTank;
+                }
+			}
+	
+			if (GUILayout.Button("<< Back"))
+			{
+				// Go back to main menu
+				this.state = MenuState.MainMenu;
+			}
+	
+			GUILayout.FlexibleSpace();
+			GUILayout.EndVertical();
+		}
+	}
+
+	void Menu_SelectTank()
+	{
+		if (GUILayout.Button("Light Tank"))
 		{
-			this.state = MenuState.MainMenu;
+			this.nTankID = 0;
+			this.bSelected = true;
+		}
+		if (GUILayout.Button("Medium Tank"))
+		{
+			this.nTankID = 1;
+			this.bSelected = true;
+		}
+		if (GUILayout.Button("Heavy Tank"))
+		{
+			this.nTankID = 2;
+			this.bSelected = true;
 		}
 
-		GUILayout.FlexibleSpace();
-		GUILayout.EndVertical();
+		if (this.bSelected)
+		{
+			// Go to start or wait
+			this.state = MenuState.StartOrWait;
+
+			if (Network.isClient)
+			{
+				// Notify the server
+				this.m_context.networkView.RPC("Ready", RPCMode.Server);
+			}
+
+			// Notify everyone
+			this.m_context.networkView.RPC("TankChoice", RPCMode.AllBuffered, this.nTankID, Network.player);
+			this.m_context.player.ready = true;
+		}
 	}
+
+	void Menu_StartOrWait()
+	{
+		if (Network.isServer)
+		{
+			bool bCanGo = true;
+			// Check whether all players are ready
+			foreach (PlayerData player in this.m_context.playerList.Values)
+			{
+				if (!player.ready)
+				{
+					bCanGo = false;
+				}
+			}
+
+			if (bCanGo)
+			{
+				if (GUILayout.Button("Go!"))
+				{
+					// Don't allow any more players
+        			Network.maxConnections = -1;
+					// Unregister to prevent new players from coming
+					MasterServer.UnregisterHost();
+					// Disable menu
+					this.state = MenuState.None;
+					// Start level
+					this.m_context.StartLevel();
+				}
+			}
+			else
+			{
+				GUILayout.Label("Waiting clients...");
+			}
+		}
+		else
+		{
+			GUILayout.Label("Waiting start of the game...");
+		}
+	}
+	#endregion // GUI
 }
 
