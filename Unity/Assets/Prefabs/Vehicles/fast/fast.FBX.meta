@@ -1,142 +1,142 @@
 fileFormatVersion: 2
-guid: afbc54d956d2376458f38bf2961f9f82
+guid: 3da31315eff0d8f4e8107d53a70ac005
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
-    100000: body
-    100002: Cylinder058
-    100004: Cylinder059
-    100006: exhaust1
-    100008: exhaust2
-    100010: //RootNode
-    100012: gun1
-    100014: gun2
-    100016: gun3
-    100018: gunGround
-    100020: gunHandle
-    100022: gunLoop1
-    100024: gunLoop2
-    100026: gunRotate
-    100028: gunRotate360
+    100000: //RootNode
+    100002: Object018
+    100004: Object017
+    100006: Cylinder059
+    100008: Object016
+    100010: Object015
+    100012: Object014
+    100014: Object013
+    100016: Object012
+    100018: Object011
+    100020: Cylinder058
+    100022: Object010
+    100024: wheelFrontRight
+    100026: exhaust1
+    100028: gunHandle
     100030: gunRotHolder
-    100032: nitro2
-    100034: nitro2 1
-    100036: Object003
-    100038: Object010
-    100040: Object011
-    100042: Object012
-    100044: Object013
-    100046: Object014
-    100048: Object015
-    100050: Object016
-    100052: Object017
-    100054: Object018
-    100056: wheelFrontLeft001
-    100058: wheelFrontLeft002
-    100060: wheelFrontLeftProtector001
-    100062: wheelFrontLeftProtector002
-    100064: wheelFrontRight
-    100066: wheelFrontRight001
-    400000: body
-    400002: Cylinder058
-    400004: Cylinder059
-    400006: exhaust1
-    400008: exhaust2
-    400010: //RootNode
-    400012: gun1
-    400014: gun2
-    400016: gun3
-    400018: gunGround
-    400020: gunHandle
-    400022: gunLoop1
-    400024: gunLoop2
-    400026: gunRotate
-    400028: gunRotate360
+    100032: gunGround
+    100034: gunRotate
+    100036: gun1
+    100038: exhaust2
+    100040: nitro2 1
+    100042: gunRotate360
+    100044: gun2
+    100046: gun3
+    100048: gunLoop1
+    100050: gunLoop2
+    100052: nitro2
+    100054: body
+    100056: Object003
+    100058: wheelFrontRight001
+    100060: wheelFrontLeftProtector002
+    100062: wheelFrontLeft002
+    100064: wheelFrontLeftProtector001
+    100066: wheelFrontLeft001
+    400000: //RootNode
+    400002: Object018
+    400004: Object017
+    400006: Cylinder059
+    400008: Object016
+    400010: Object015
+    400012: Object014
+    400014: Object013
+    400016: Object012
+    400018: Object011
+    400020: Cylinder058
+    400022: Object010
+    400024: wheelFrontRight
+    400026: exhaust1
+    400028: gunHandle
     400030: gunRotHolder
-    400032: nitro2
-    400034: nitro2 1
-    400036: Object003
-    400038: Object010
-    400040: Object011
-    400042: Object012
-    400044: Object013
-    400046: Object014
-    400048: Object015
-    400050: Object016
-    400052: Object017
-    400054: Object018
-    400056: wheelFrontLeft001
-    400058: wheelFrontLeft002
-    400060: wheelFrontLeftProtector001
-    400062: wheelFrontLeftProtector002
-    400064: wheelFrontRight
-    400066: wheelFrontRight001
-    2300000: body
-    2300002: Cylinder058
+    400032: gunGround
+    400034: gunRotate
+    400036: gun1
+    400038: exhaust2
+    400040: nitro2 1
+    400042: gunRotate360
+    400044: gun2
+    400046: gun3
+    400048: gunLoop1
+    400050: gunLoop2
+    400052: nitro2
+    400054: body
+    400056: Object003
+    400058: wheelFrontRight001
+    400060: wheelFrontLeftProtector002
+    400062: wheelFrontLeft002
+    400064: wheelFrontLeftProtector001
+    400066: wheelFrontLeft001
+    2300000: Object018
+    2300002: Object017
     2300004: Cylinder059
-    2300006: exhaust1
-    2300008: exhaust2
-    2300010: gun1
-    2300012: gun2
-    2300014: gun3
-    2300016: gunGround
-    2300018: gunHandle
-    2300020: gunLoop1
-    2300022: gunLoop2
-    2300024: gunRotate
-    2300026: gunRotate360
+    2300006: Object016
+    2300008: Object015
+    2300010: Object014
+    2300012: Object013
+    2300014: Object012
+    2300016: Object011
+    2300018: Cylinder058
+    2300020: Object010
+    2300022: wheelFrontRight
+    2300024: exhaust1
+    2300026: gunHandle
     2300028: gunRotHolder
-    2300030: nitro2
-    2300032: nitro2 1
-    2300034: Object003
-    2300036: Object010
-    2300038: Object011
-    2300040: Object012
-    2300042: Object013
-    2300044: Object014
-    2300046: Object015
-    2300048: Object016
-    2300050: Object017
-    2300052: Object018
-    2300054: wheelFrontLeft001
-    2300056: wheelFrontLeft002
-    2300058: wheelFrontLeftProtector001
-    2300060: wheelFrontLeftProtector002
-    2300062: wheelFrontRight
-    2300064: wheelFrontRight001
-    3300000: body
-    3300002: Cylinder058
+    2300030: gunGround
+    2300032: gunRotate
+    2300034: gun1
+    2300036: exhaust2
+    2300038: nitro2 1
+    2300040: gunRotate360
+    2300042: gun2
+    2300044: gun3
+    2300046: gunLoop1
+    2300048: gunLoop2
+    2300050: nitro2
+    2300052: body
+    2300054: Object003
+    2300056: wheelFrontRight001
+    2300058: wheelFrontLeftProtector002
+    2300060: wheelFrontLeft002
+    2300062: wheelFrontLeftProtector001
+    2300064: wheelFrontLeft001
+    3300000: Object018
+    3300002: Object017
     3300004: Cylinder059
-    3300006: exhaust1
-    3300008: exhaust2
-    3300010: gun1
-    3300012: gun2
-    3300014: gun3
-    3300016: gunGround
-    3300018: gunHandle
-    3300020: gunLoop1
-    3300022: gunLoop2
-    3300024: gunRotate
-    3300026: gunRotate360
+    3300006: Object016
+    3300008: Object015
+    3300010: Object014
+    3300012: Object013
+    3300014: Object012
+    3300016: Object011
+    3300018: Cylinder058
+    3300020: Object010
+    3300022: wheelFrontRight
+    3300024: exhaust1
+    3300026: gunHandle
     3300028: gunRotHolder
-    3300030: nitro2
-    3300032: nitro2 1
-    3300034: Object003
-    3300036: Object010
-    3300038: Object011
-    3300040: Object012
-    3300042: Object013
-    3300044: Object014
-    3300046: Object015
-    3300048: Object016
-    3300050: Object017
-    3300052: Object018
-    3300054: wheelFrontLeft001
-    3300056: wheelFrontLeft002
-    3300058: wheelFrontLeftProtector001
-    3300060: wheelFrontLeftProtector002
-    3300062: wheelFrontRight
-    3300064: wheelFrontRight001
+    3300030: gunGround
+    3300032: gunRotate
+    3300034: gun1
+    3300036: exhaust2
+    3300038: nitro2 1
+    3300040: gunRotate360
+    3300042: gun2
+    3300044: gun3
+    3300046: gunLoop1
+    3300048: gunLoop2
+    3300050: nitro2
+    3300052: body
+    3300054: Object003
+    3300056: wheelFrontRight001
+    3300058: wheelFrontLeftProtector002
+    3300060: wheelFrontLeft002
+    3300062: wheelFrontLeftProtector001
+    3300064: wheelFrontLeft001
     4300000: Object003
     4300002: body
     4300004: nitro2
@@ -170,10 +170,10 @@ ModelImporter:
     4300060: Cylinder059
     4300062: Object017
     4300064: Object018
-    9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 1
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
@@ -187,7 +187,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 0
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -221,5 +221,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   additionalBone: 1
-  animationType: 2
+  animationType: 1
   userData: 

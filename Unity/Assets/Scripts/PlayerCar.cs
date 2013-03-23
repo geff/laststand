@@ -35,7 +35,7 @@ public class PlayerCar : MonoBehaviour
 	void  Start ()
 	{
 		// I usually alter the center of mass to make the car more stable. I'ts less likely to flip this way.
-		rigidbody.centerOfMass += new Vector3 (0, -1, .25f);
+		rigidbody.centerOfMass += new Vector3 (0, -1f, .25f);
 	}
 
 	void  Update ()
