@@ -12,6 +12,7 @@ public class PlayerData
 	public NetworkPlayer networkPlayer;
 	public int playerID;
 	public TankType lastTankType;
+	public GameObject playerTank;
 	#endregion // In-Game Properties
 
 	#region Out-Game Properties

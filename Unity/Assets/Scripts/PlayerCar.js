@@ -17,7 +17,12 @@ var MaxEngineRPM : float = 3000.0;
 var MinEngineRPM : float = 1000.0;
 private var EngineRPM : float = 0.0;
 
-
+function Awake() {
+	// !! code bourrin
+	if (!networkView.isMine) {
+		Destroy(this);
+	}
+}
 
 function Start () {
 	// I usually alter the center of mass to make the car more stable. I'ts less likely to flip this way.
