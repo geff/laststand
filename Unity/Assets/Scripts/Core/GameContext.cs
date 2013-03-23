@@ -64,13 +64,21 @@ public class GameContext : MonoBehaviour
 
         if (additive)
         {
+#if UNITY_PRO
             AsyncOperation async = Application.LoadLevelAdditiveAsync(levelName);
             yield return async;
+#else
+			Application.LoadLevelAdditive(levelName);
+#endif
         }
         else
         {
+#if UNITY_PRO
             AsyncOperation async = Application.LoadLevelAsync(levelName);
             yield return async;
+#else
+			Application.LoadLevel(levelName);
+#endif
         }
     }
 
@@ -108,7 +116,6 @@ public class GameContext : MonoBehaviour
             (go as GameObject).SendMessage("OnNetworkLevelLoaded", SendMessageOptions.DontRequireReceiver);
         }
 	}
-	#endregion // Event Handlers
 
 	#region Client
     void OnConnectedToServer()
@@ -146,6 +153,26 @@ public class GameContext : MonoBehaviour
     }
     #endregion
 
+	[RPC]
+	void InitializePlayer(NetworkPlayer networkPlayer, string username, int playerID)
+	{
+        Debug.Log(string.Format("[InitializePlayer]: networkID={0}, username={1}, playerID={2}",
+                                networkPlayer, username, playerID));
+        PlayerData player;
+        if (!this.playerList.TryGetValue(networkPlayer.GetHashCode(), out player))
+        {
+            player = new PlayerData();
+            this.playerList.Add(networkPlayer.GetHashCode(), player);
+        }
+
+        // Update player
+        player.networkPlayer = networkPlayer;
+        player.username = username;
+        player.playerID = playerID;
+
+		Debug.Log(string.Format("[InitializePlayer]: player {0} is {1}valid", username, player.isValid? "": "in"));
+	}
+
 	#region Server
     void OnServerInitialized()
     {
@@ -166,13 +193,70 @@ public class GameContext : MonoBehaviour
     void OnPlayerDisconnected(NetworkPlayer player)
     {
         Debug.Log("[GameContext]: OnPlayerDisconnected");
-        // TODO...
 
         // Clean up player in all clients
         this.playerList.Remove(player.GetHashCode());
         Network.RemoveRPCs(player);
         Network.DestroyPlayerObjects(player);
     }
-    #endregion
+
+	internal void StartLevel()
+	{
+		// Finish player initialization
+		int lastPlayerID = 1;
+		foreach (KeyValuePair<int, PlayerData> pair in this.playerList)
+		{
+			if (pair.Key != Network.player.GetHashCode())
+			{
+				pair.Value.playerID = lastPlayerID++;
+			}
+		}
+
+		// Remove any remaining event in server buffer
+        Network.RemoveRPCsInGroup(0);
+        Network.RemoveRPCsInGroup(1);
+
+		// Send initialized player data to all clients
+        foreach (PlayerData player in this.playerList.Values)
+        {
+            networkView.RPC("InitializePlayer", RPCMode.OthersBuffered, player.networkPlayer, player.username, player.playerID);
+        }
+
+		// Load the level on all clients (including server)
+        networkView.RPC("LoadLevel", RPCMode.OthersBuffered, "Arena", this.m_nLastLevelPrefix + 1);
+        StartCoroutine(LoadLevel("Arena", this.m_nLastLevelPrefix + 1));
+	}
+	#endregion // Server
+	#endregion // Event Handlers
+
+	[RPC]
+	void Ready(NetworkMessageInfo info)
+	{
+		PlayerData player;
+        if (this.playerList.TryGetValue(info.sender.GetHashCode(), out player))
+        {
+            player.ready = true;
+			Debug.Log(string.Format("[Ready]: {0}", player.username));
+        }
+		else
+		{
+			Debug.LogError("[Ready]: unknown player");
+		}
+	}
+
+	[RPC]
+	void TankChoice(int tankID, NetworkPlayer sender)
+	{
+		PlayerData player;
+        if (this.playerList.TryGetValue(sender.GetHashCode(), out player))
+        {
+            player.lastTankType = (TankType) tankID;
+			Debug.Log(string.Format("[TankChoice]: {0}", player.lastTankType.ToString()));
+        }
+		else
+		{
+			Debug.LogError("[TankChoice]: unknown player");
+		}
+	}
 }
 
