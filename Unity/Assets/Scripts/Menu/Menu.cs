@@ -42,7 +42,7 @@ public class Menu : MonoBehaviour
 	int nTankID = -1;
 	#endregion // Select Tank
 
-	void Awake()
+	void Start()
 	{
 		this.sUsername = "";
 		// Get the game context and cache the reference
@@ -329,6 +329,9 @@ public class Menu : MonoBehaviour
 			// Notify everyone
 			this.m_context.networkView.RPC("TankChoice", RPCMode.AllBuffered, this.nTankID, Network.player);
 			this.m_context.player.ready = true;
+
+			// Get the prefab
+			this.m_context.player.playerTank = (GameObject) Resources.Load("VehiclePrefab");
 		}
 	}
 
