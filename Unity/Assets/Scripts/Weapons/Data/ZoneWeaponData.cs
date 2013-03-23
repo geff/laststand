@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [System.Serializable]
-public class ZoneWeaponData : ScriptableObject
+public class ZoneWeaponData : BaseWeaponData
 {
 	public float damage;
 	public float radius;
