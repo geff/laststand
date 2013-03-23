@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [AddComponentMenu("Last Stand/Core/Game Singleton")]
 public class GameSingleton : MonoBehaviour
