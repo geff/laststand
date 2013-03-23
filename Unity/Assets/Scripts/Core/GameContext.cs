@@ -202,6 +202,11 @@ public class GameContext : MonoBehaviour
 
 	internal void StartLevel()
 	{
+		if (Network.isClient)
+		{
+			return;
+		}
+
 		// Finish player initialization
 		int lastPlayerID = 1;
 		foreach (KeyValuePair<int, PlayerData> pair in this.playerList)
