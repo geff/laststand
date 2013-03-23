@@ -335,15 +335,15 @@ public class Menu : MonoBehaviour
 			switch (this.m_context.player.lastTankType)
 			{
 			case TankType.Light:
-				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().lightTank;
+				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().lightTank);
 				break;
 
 			case TankType.Medium:
-				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().mediumTank;
+				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().mediumTank);
 				break;
 
 			case TankType.Heavy:
-				playerTank = ((VehicleController) Resources.Load("AssetHolder")).GetComponent<AssetHolder>().heavyTank;
+				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().heavyTank);
 				break;
 			}
 			this.m_context.player.playerTank = playerTank;
