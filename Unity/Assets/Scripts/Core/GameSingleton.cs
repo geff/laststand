@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 [AddComponentMenu("Last Stand/Core/Game Singleton")]
+[RequireComponent(typeof(GameContext))]
+[RequireComponent(typeof(Menu))]
 public class GameSingleton : MonoBehaviour
 {
 	public static GameSingleton Instance
@@ -24,13 +26,31 @@ public class GameSingleton : MonoBehaviour
 	}
 	private static GameSingleton s_instance = null;
 
-	public GameConfig config;
+	public GameConfig config
+	{
+		get;
+		private set;
+	}
+	public GameContext context
+	{
+		get;
+		private set;
+	}
 	public GameState gameState;
+	public Menu menu
+	{
+		get;
+		private set;
+	}
 	
 	void Awake()
 	{
 		// Get the game config.
 		this.config = (GameConfig) Resources.Load("GameConfig", typeof(GameConfig));
+		// Get the game context.
+		this.context = GetComponent<GameContext>();
+		// Get the menu.
+		this.menu = GetComponent<Menu>();
 	}
 	
 	void Start()
@@ -43,6 +63,7 @@ public class GameSingleton : MonoBehaviour
 	{
 		// Release references
 		this.config = null;
+		this.context = null;
 		this.gameState = null;
 		GameSingleton.s_instance = null;
 
