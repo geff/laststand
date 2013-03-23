@@ -13,11 +13,11 @@ public abstract class BaseCapacity : MonoBehaviour
     public string CapacityName;
 
     //[HideInInspector]
-    public Vehicle ParentVehicle;
+    public VehicleController ParentVehicle;
 
     public void Start()
     {
-        this.ParentVehicle = this.transform.gameObject.GetComponentInChildren<Vehicle>();
+        this.ParentVehicle = this.transform.gameObject.GetComponentInChildren<VehicleController>();
         this.LastActivity = this.CoolDown;
     }
 
