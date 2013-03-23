@@ -32,7 +32,7 @@ public class Gun : MonoBehaviour
     void Shoot()
     {
         Rigidbody projectile = Instantiate(bullet, myTransform.position, myTransform.rotation) as Rigidbody;
-        projectile.AddForce(myTransform.forward * 500);
+        projectile.AddForce(myTransform.forward * 1000);
         lastShot = Time.time;
     }
 }
