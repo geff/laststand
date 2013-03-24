@@ -36,6 +36,13 @@ public class VehicleController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        Life -= damage;
+        if (Life < 0)
+            Life = 0;
+    }
+
 	[RPC]
 	internal void InitializeController(NetworkPlayer owner)
 	{

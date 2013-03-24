@@ -6,6 +6,7 @@ public class GrenadeBehaviour : MonoBehaviour
 
     private Transform myTransform;
     public ZoneWeaponData data;
+    public Detonator explosion;
 
     private float startTime;
 
@@ -19,6 +20,24 @@ public class GrenadeBehaviour : MonoBehaviour
     void Update()
     {
         if (Time.time >= startTime + data.timer)
-            Destroy(gameObject);
+        {
+            foreach (PlayerData p in GameSingleton.Instance.context.playerList.Values)
+            {
+                VehicleController vh = p.playerTank;
+                if (Vector3.Distance(vh.transform.position, myTransform.position) <= data.radius)
+                {
+                    vh.TakeDamage(data.damage);
+                    Explode();
+                }
+                Debug.Log(Vector3.Distance(vh.transform.position, myTransform.position) + " <= " + data.radius);
+            }
+            Explode();
+        }
+    }
+
+    void Explode()
+    {
+        Instantiate(explosion, myTransform.position, myTransform.rotation);
+        Destroy(gameObject);
     }
 }
