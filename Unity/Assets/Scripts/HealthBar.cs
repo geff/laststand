@@ -31,10 +31,15 @@ public class HealthBar : MonoBehaviour {
 			c = normalHPColor;
 		}
 		var trpos = tr.position;
+//		Debug.Log(trpos);
+//		Debug.Log(Camera.mainCamera.rect);
 		Vector3 pos = Camera.mainCamera.WorldToViewportPoint(trpos);
+		if (pos.x < 0 || pos.y < 0 || pos.z < 0) {// if the thing is not in the screen, do not display it
+			return;
+		}
 //		Debug.Log(pos);
 		pos.x += offsetX;
-		pos.y += offsetY;
+		pos.y += offsetY	;
 		
 		Rect r = new Rect(pos.x * Screen.width, pos.y * Screen.height, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
 		Hud.drawRectangle(c, r);
