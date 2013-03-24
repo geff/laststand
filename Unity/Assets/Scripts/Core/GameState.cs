@@ -138,19 +138,41 @@ public class GameState : MonoBehaviour
 	{
 		// Give control back to players
 		this.m_context.player.playerTank.SetPlayerControl(true);
-
+		Transform playerTransform = this.m_context.player.playerTank.transform;
 
 		while (this.currentPhase == Phase.Fighting)
 		{
+			if (playerTransform.position.y < -10.0f)
+			{
+				Camera.main.GetComponent<SmoothFollow>().target = null;
+				this.currentPhase = Phase.EndOfFight;
+			}
 			yield return null;
 		}
 	}
 
 	IEnumerator State_EndOfFight()
 	{
-		while (this.currentPhase == Phase.EndOfFight)
+		networkView.RPC("DieHard", RPCMode.Others, Network.player);
+		yield return StartCoroutine(DieHard(Network.player));
+
+		if (Network.isClient)
 		{
-			yield return null;
+			Network.Disconnect();
+			this.currentPhase = Phase.Results;
+			yield break;
+		}
+		else
+		{
+			// Remove the player from everywhere
+			this.m_context.networkView.RPC("RemovePlayer", RPCMode.Others, Network.player);
+			Network.Destroy(this.m_context.player.playerTank.gameObject);
+			this.m_context.player.playerTank = null;
+
+			while (this.currentPhase == Phase.EndOfFight)
+			{
+				yield return null;
+			}
 		}
 	}
 
@@ -158,6 +180,12 @@ public class GameState : MonoBehaviour
 	{
 		while (this.currentPhase == Phase.Results)
 		{
+			if (Network.isServer && Network.connections.Length < 2)
+			{
+				this.currentPhase = Phase.Idle;
+				Network.Disconnect();
+				yield break;
+			}
 			yield return null;
 		}
 	}
@@ -234,6 +262,29 @@ public class GameState : MonoBehaviour
 		playerTank.GetComponent<VehicleController>().InitializeController(Network.player);
 		// Setup camera
 		Camera.main.GetComponent<SmoothFollow>().target = playerTank.transform;
+	}
+
+	[RPC]
+	IEnumerator DieHard(NetworkPlayer owner)
+	{
+		Transform t = null;
+		if (owner == Network.player)
+		{
+			t = this.m_context.player.playerTank.transform;
+		}
+		else
+		{
+			PlayerData data;
+			if( this.m_context.playerList.TryGetValue(owner.GetHashCode(), out data))
+			{
+				t = data.playerTank.transform;
+			}
+		}
+		if (t != null)
+		{
+			Detonator det = (Detonator) Instantiate(GameSingleton.Instance.assetHolder.armageddon, t.position, t.rotation);
+			yield return new WaitForSeconds(det.duration);
+		}
 	}
 
 	#region Synchronization

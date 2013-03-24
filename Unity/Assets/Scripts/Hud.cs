@@ -56,7 +56,7 @@ public class Hud : MonoBehaviour
 		
 		int j = 0; // ourself
 		foreach (PlayerData pdata in GameSingleton.Instance.context.playerList.Values) {// for all players connected
-			if (pdata.playerTank.Life > 0) {// if the player is alive
+			if (pdata != null && pdata.playerTank != null && pdata.playerTank.Life > 0) {// if the player is alive
 				j++;// count it in!
 			}
 		}

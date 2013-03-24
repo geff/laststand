@@ -40,5 +40,7 @@ public class AssetHolder : MonoBehaviour
 	public AudioClip inGameMusic;
 	public AudioClip[] SFXs;
 	#endregion // SFX & BGM
+
+	public Detonator armageddon;
 }
 
