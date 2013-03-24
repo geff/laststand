@@ -37,6 +37,15 @@ ModelImporter:
     100062: wheelFrontLeft002
     100064: wheelFrontLeftProtector001
     100066: wheelFrontLeft001
+    100068: Character001
+    100070: Character001corps
+    100072: Character001turret_arm
+    100074: Character001turret_base
+    100076: Character001turret_gun
+    100078: Character001wheel_left_back
+    100080: Character001wheel_left_front
+    100082: Character001wheel_right_back
+    100084: Character001wheel_right_front
     400000: //RootNode
     400002: Object018
     400004: Object017
@@ -71,6 +80,15 @@ ModelImporter:
     400062: wheelFrontLeft002
     400064: wheelFrontLeftProtector001
     400066: wheelFrontLeft001
+    400068: Character001
+    400070: Character001corps
+    400072: Character001turret_arm
+    400074: Character001turret_base
+    400076: Character001turret_gun
+    400078: Character001wheel_left_back
+    400080: Character001wheel_left_front
+    400082: Character001wheel_right_back
+    400084: Character001wheel_right_front
     2300000: Object018
     2300002: Object017
     2300004: Cylinder059
@@ -170,7 +188,42 @@ ModelImporter:
     4300060: Cylinder059
     4300062: Object017
     4300064: Object018
+    7400000: Roll
+    7400002: CanonShoot
     11100000: //RootNode
+    13700000: body
+    13700002: Cylinder058
+    13700004: Cylinder059
+    13700006: exhaust1
+    13700008: exhaust2
+    13700010: gun1
+    13700012: gun2
+    13700014: gun3
+    13700016: gunGround
+    13700018: gunHandle
+    13700020: gunLoop1
+    13700022: gunLoop2
+    13700024: gunRotate
+    13700026: gunRotate360
+    13700028: gunRotHolder
+    13700030: nitro2
+    13700032: nitro2 1
+    13700034: Object003
+    13700036: Object010
+    13700038: Object011
+    13700040: Object012
+    13700042: Object013
+    13700044: Object014
+    13700046: Object015
+    13700048: Object016
+    13700050: Object017
+    13700052: Object018
+    13700054: wheelFrontLeft001
+    13700056: wheelFrontLeft002
+    13700058: wheelFrontLeftProtector001
+    13700060: wheelFrontLeftProtector002
+    13700062: wheelFrontRight
+    13700064: wheelFrontRight001
   materials:
     importMaterials: 1
     materialName: 1
@@ -183,11 +236,53 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: Roll
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      transformMask: []
+    - name: CanonShoot
+      takeName: Take 001
+      firstFrame: 81
+      lastFrame: 121
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      transformMask: []
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
