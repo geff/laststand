@@ -50,7 +50,7 @@ public class PlayerCar : MonoBehaviour
 		
 		// the steer angle is an arbitrary value multiplied by the user input.
 		FrontLeftWheel.steerAngle = 12 * Input.GetAxis ("Horizontal");
-		FrontRightWheel.steerAngle = 10 * Input.GetAxis ("Horizontal");
+		FrontRightWheel.steerAngle = 12 * Input.GetAxis ("Horizontal");
 	}
 
 	void  ShiftGears ()
