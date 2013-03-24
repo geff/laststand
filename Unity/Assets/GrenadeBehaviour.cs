@@ -26,10 +26,10 @@ public class GrenadeBehaviour : MonoBehaviour
                 VehicleController vh = p.playerTank;
                 if (Vector3.Distance(vh.transform.position, myTransform.position) <= data.radius)
                 {
+                    Debug.Log("Boum grenade " + Vector3.Distance(vh.transform.position, myTransform.position) + " <= " + data.radius);
                     vh.TakeDamage(data.damage);
                     Explode();
-                }
-                Debug.Log(Vector3.Distance(vh.transform.position, myTransform.position) + " <= " + data.radius);
+                }  
             }
             Explode();
         }

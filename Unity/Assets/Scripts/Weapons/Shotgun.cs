@@ -8,5 +8,6 @@ public class Shotgun : BaseCapacity
     {
         base.ApplyCapacity();
 
+
     }
 }
