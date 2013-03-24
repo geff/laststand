@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Hud : MonoBehaviour
 {
-	public int capacityWidth = 100; // The width of the capacity button/texture2D to be displayed in the HUD	
+	public const int capacityWidth = 50; // The width of the capacity button/texture2D to be displayed in the HUD	
 	public void Start() {
 		Debug.Log("HUD::Start()");
 		int i = 0;
@@ -30,9 +30,14 @@ public class Hud : MonoBehaviour
 		if (null != GameSingleton.Instance.gameState && GameSingleton.Instance.gameState.currentPhase == GameState.Phase.CountDown) {
 			// TODO display thinngs
 			var screen = new Rect(0,0,Screen.width, Screen.height);
+			var screenCenterLabel = new Rect(Screen.width*(1/2.0f-1/6.0f), Screen.height*(1/2.0f-1/6.0f), Screen.width/3.0f, Screen.height/3.0f);
 			Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
 			Hud.drawRectangle(overlay, screen);
-			GUI.Label(screen, GameSingleton.Instance.gameState.countDown);
+			var style = new GUIStyle();
+			style.fontSize = 350;
+			style.normal.textColor = Color.white;
+			Debug.Log ("hqaha:" + style.fontSize);
+			GUI.Label(screenCenterLabel, GameSingleton.Instance.gameState.countDown, style);
 		}
 		
 		
@@ -64,7 +69,7 @@ public class Hud : MonoBehaviour
 	
 	public int alivePlayersWidth = 60;
 	public int alivePlayersHeight = 45;
-	public int elementsMargin = 10; // in pixels
+	public int elementsMargin = 8; // in pixels
 	
 	private void dispAlivePlayers(int n_alive) {
 		Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
