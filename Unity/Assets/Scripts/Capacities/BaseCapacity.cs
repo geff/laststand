@@ -5,19 +5,19 @@ using System;
 
 public abstract class BaseCapacity : MonoBehaviour
 {
-    /// <summary>
-    /// Cooldown en secondes
-    /// </summary>
-    public float CoolDown;
-    public float LastActivity;
-    public string Key;
-    public string CapacityName;
+	/// <summary>
+	/// Cooldown en secondes
+	/// </summary>
+	public float CoolDown;
+	public float LastActivity;
+	public string Key;
+	public string CapacityName;
 	public Texture2D GUIPicture;
     public AudioClip Sound;
     public int Volume;
 
-    //[HideInInspector]
-    public VehicleController ParentVehicle;
+	//[HideInInspector]
+	public VehicleController ParentVehicle;
 
     private Transform myTransform;
 
