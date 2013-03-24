@@ -42,7 +42,7 @@ public class GUISkill : MonoBehaviour {
 			unicolor.Apply();
 			int result = (int)(width * (1.0f - getPercentage()));
 //			Debug.Log("result width=" + result);
-			GUI.DrawTexture(new Rect(positionX, positionY, result, height-2), unicolor);
+			GUI.DrawTexture(new Rect(positionX, positionY+4, result, height-8), unicolor);
 			GUI.color = backup;
 		}
 		
