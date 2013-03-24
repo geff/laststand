@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GUISkill : MonoBehaviour {
+public class GUISkill {
 
 	public int positionX = 10;
 	public int positionY = 10;
