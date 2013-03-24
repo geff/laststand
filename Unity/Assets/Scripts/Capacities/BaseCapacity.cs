@@ -33,6 +33,12 @@ public abstract class BaseCapacity : MonoBehaviour
         this.LastActivity = Time.time;
         if (Sound != null)
             AudioSource.PlayClipAtPoint(Sound, myTransform.position, Volume);
+
+        if (!String.IsNullOrEmpty(this.AnimationName))
+        {
+            this.ParentVehicle.animation.Play(this.AnimationName);
+        }
+
         Debug.Log(this.CapacityName + " " + this.LastActivity.ToString());
     }
 }
