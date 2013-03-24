@@ -14,6 +14,7 @@ public abstract class BaseCapacity : MonoBehaviour
 	public Texture2D GUIPicture;
     public AudioClip Sound;
     public int Volume;
+    public string AnimationName;
 
 	//[HideInInspector]
 	public VehicleController ParentVehicle;
