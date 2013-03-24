@@ -182,7 +182,7 @@ public class GameContext : MonoBehaviour
         if (tempPlayer != null)
         {
 			// First initialization of the player in all clients through RPC
-            networkView.RPC("InitializePlayer", RPCMode.AllBuffered, Network.player, tempPlayer.username, PlayerData.INVALID_ID);
+            networkView.RPC("InitializePlayer", RPCMode.AllBuffered, Network.player, tempPlayer.username, 0);
         }
         else
         {
@@ -208,6 +208,7 @@ public class GameContext : MonoBehaviour
 		}
 
 		// Finish player initialization
+		// 0: is the server
 		int lastPlayerID = 1;
 		foreach (KeyValuePair<int, PlayerData> pair in this.playerList)
 		{
