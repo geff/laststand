@@ -20,6 +20,13 @@ public class Hud : MonoBehaviour
 	private IList<GUISkill> skills = new List<GUISkill>();
 	
 	public void OnGUI () {
+		PlayerData player = GameSingleton.Instance.context.player;
+		// Cannot display HUD before player is at least in 'Playing' state
+		if (player.currentState < PlayerState.Playing)
+		{
+			return;
+		}
+
 		// start debug code
 		int i = 0;
 //		skills = new List<GUISkill>();

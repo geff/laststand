@@ -392,7 +392,7 @@ public class GameContext : MonoBehaviour
 	{
 		PlayerData player;
 		if (this.playerList.TryGetValue (info.sender.GetHashCode (), out player)) {
-			player.ready = true;
+			player.currentState = PlayerState.Ready;
 			Debug.Log (string.Format ("[Ready]: {0}", player.username));
 		} else {
 			Debug.LogError ("[Ready]: unknown player");

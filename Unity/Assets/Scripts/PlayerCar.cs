@@ -22,10 +22,6 @@ public class PlayerCar : MonoBehaviour
 	public float MinEngineRPM = 1000.0f;
 	private float EngineRPM = 0.0f;
 
-	void Awake()
-	{
-	}
-
 	void Start()
 	{
 		// I usually alter the center of mass to make the car more stable. I'ts less likely to flip this way.

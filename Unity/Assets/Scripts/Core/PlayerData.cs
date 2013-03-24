@@ -1,6 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
+public enum PlayerState
+{
+	None,
+	SelectingTank,
+	Ready,
+	Playing,
+	Dead,
+}
+
 [System.Serializable]
 public class PlayerData
 {
@@ -16,7 +25,11 @@ public class PlayerData
 	#endregion // In-Game Properties
 
 	#region Out-Game Properties
-	public bool ready;
+	public bool isReady
+	{
+		get { return this.currentState == PlayerState.Ready; }
+	}
+	public PlayerState currentState;
 	#endregion // Out-Game Properties
 
 	public bool isValid
@@ -33,7 +46,7 @@ public class PlayerData
 	{
 		this.username = "Anonymous";
 		this.playerID = PlayerData.INVALID_ID;
-		this.ready = false;
+		this.currentState = PlayerState.None;
 	}
 
 	#region System.Object overrides

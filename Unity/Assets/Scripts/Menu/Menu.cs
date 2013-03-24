@@ -293,6 +293,7 @@ public class Menu : MonoBehaviour
                     Debug.Log("Try to join :" + error);
 					// Goto select tank
 					this.state = MenuState.SelectTank;
+					this.m_context.player.currentState = PlayerState.SelectingTank;
                 }
 			}
 	
@@ -338,7 +339,7 @@ public class Menu : MonoBehaviour
 
 			// Notify everyone
 			this.m_context.networkView.RPC("TankChoice", RPCMode.AllBuffered, this.nTankID, Network.player);
-			this.m_context.player.ready = true;
+			this.m_context.player.currentState = PlayerState.Ready;
 
 			// Get the prefab
 			VehicleController playerTank = null;
@@ -368,7 +369,7 @@ public class Menu : MonoBehaviour
 			// Check whether all players are ready
 			foreach (PlayerData player in this.m_context.playerList.Values)
 			{
-				if (!player.ready)
+				if (!player.isReady)
 				{
 					bCanGo = false;
 				}

@@ -54,8 +54,10 @@ public class EntryPoint : MonoBehaviour
 		case SceneMode.Fight:
 			// Play the in-game background music
 			singleton.context.PlayAmbiance( singleton.assetHolder.inGameMusic );
-			// Create the game state
-			singleton.gameState = gameObject.AddComponent<GameState>();
+			// Get the game state
+			singleton.gameState = GetComponent<GameState>();
+			// Disable the menu
+			singleton.menu.state = MenuState.None;
 			break;
 		case SceneMode.Loading:
 			break;
