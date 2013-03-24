@@ -26,6 +26,11 @@ public class GameSingleton : MonoBehaviour
 	}
 	private static GameSingleton s_instance = null;
 
+	public AssetHolder assetHolder
+	{
+		get;
+		private set;
+	}
 	public GameConfig config
 	{
 		get;
@@ -51,6 +56,8 @@ public class GameSingleton : MonoBehaviour
 		this.context = GetComponent<GameContext>();
 		// Get the menu.
 		this.menu = GetComponent<Menu>();
+		// Get the asset holder
+		this.assetHolder = (AssetHolder) Resources.Load ("AssetHolder", typeof(AssetHolder));
 	}
 	
 	void Start()

@@ -47,10 +47,13 @@ public class EntryPoint : MonoBehaviour
 			break;
 		case SceneMode.Menu:
 			// Play the menu background music
+			singleton.context.PlayAmbiance( singleton.assetHolder.menuMusic );
 			// Enable the menu
 			singleton.menu.state = MenuState.Login;
 			break;
 		case SceneMode.Fight:
+			// Play the in-game background music
+			singleton.context.PlayAmbiance( singleton.assetHolder.inGameMusic );
 			// Create the game state
 			singleton.gameState = gameObject.AddComponent<GameState>();
 			break;
