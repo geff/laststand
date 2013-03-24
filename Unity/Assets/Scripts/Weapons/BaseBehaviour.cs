@@ -5,6 +5,7 @@ public class BaseBehaviour : MonoBehaviour {
 
     private Transform myTransform;
     public FireWeaponData data;
+    public Detonator explosion;
 
     private Vector3 startPos;
 
@@ -29,6 +30,12 @@ public class BaseBehaviour : MonoBehaviour {
     void OnCollisionEnter(Collision other)
     {
         other.transform.root.rigidbody.AddForce(myTransform.forward * 50 * (data.weight / 10));
+        var vh = other.transform.root.GetComponent<VehicleController>();
+        if (vh != null)
+        {
+            vh.TakeDamage(data.damage);
+            vh.networkView.RPC("TakeDamage", RPCMode.Others, data.damage);
+        }
         Destroy(gameObject);
     }
 }
