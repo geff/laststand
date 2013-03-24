@@ -5,7 +5,7 @@ public class HealthBar : MonoBehaviour {
 	
 	public const int maxWidth = 40;// pixels
 	public const int height = 6; // pixels
-	public const int offsetX = -17, offsetY = 120;
+	public const float offsetX = -0.028f, offsetY = -0.09f;
 	
 	public VehicleController vehicle;
 	static private Color lowHPColor = new Color(1, 0, 0, 1);
@@ -30,8 +30,13 @@ public class HealthBar : MonoBehaviour {
 		} else {
 			c = normalHPColor;
 		}
-		Vector3 pos = Camera.mainCamera.WorldToScreenPoint(tr.position);
-		Rect r = new Rect(pos.x + offsetX, pos.z + offsetY, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
+		var trpos = tr.position;
+		Vector3 pos = Camera.mainCamera.WorldToViewportPoint(trpos);
+//		Debug.Log(pos);
+		pos.x += offsetX;
+		pos.y += offsetY;
+		
+		Rect r = new Rect(pos.x * Screen.width, pos.y * Screen.height, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
 		Hud.drawRectangle(c, r);
 	}
 }

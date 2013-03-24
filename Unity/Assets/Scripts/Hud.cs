@@ -26,7 +26,10 @@ public class Hud : MonoBehaviour
 		{
 			return;
 		}
-
+		if (null != GameSingleton.Instance.gameState && GameSingleton.Instance.gameState.currentPhase == GameState.Phase.CountDown) {
+			// TODO display thinngs
+			// GameSingleton.Instance.gameState.countDown
+		}
 		// start debug code
 		int i = 0;
 //		skills = new List<GUISkill>();
