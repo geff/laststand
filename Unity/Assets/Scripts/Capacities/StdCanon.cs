@@ -5,7 +5,7 @@ public class StdCanon : BaseCapacity {
 
     public Transform canon;
     public Rigidbody bullet;
-    public BaseWeaponData data;
+    public FireWeaponData data;
 
     private Transform canonTransform;
 
@@ -17,8 +17,8 @@ public class StdCanon : BaseCapacity {
     public override void ApplyCapacity()
     {
         base.ApplyCapacity();
+
         Rigidbody projectile = Instantiate(bullet, canon.position, canon.rotation) as Rigidbody;
-        projectile.AddForce(canon.forward * 1000);
-        LastActivity = Time.time;
+        projectile.AddForce(canon.forward * data.speed);
     }
 }

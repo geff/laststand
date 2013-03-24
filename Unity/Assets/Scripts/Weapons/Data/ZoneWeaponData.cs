@@ -7,4 +7,5 @@ public class ZoneWeaponData : BaseWeaponData
 	public float damage;
 	public float radius;
 	public float speed;
+    public float timer;
 }
