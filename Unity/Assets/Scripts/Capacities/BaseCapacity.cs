@@ -22,7 +22,6 @@ public abstract class BaseCapacity : MonoBehaviour
         this.LastActivity = - this.CoolDown;
     }
 
-	[RPC]
     public virtual void ApplyCapacity()
     {
         this.LastActivity = Time.time;
