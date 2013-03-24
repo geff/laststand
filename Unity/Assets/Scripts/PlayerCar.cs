@@ -22,21 +22,17 @@ public class PlayerCar : MonoBehaviour
 	public float MinEngineRPM = 1000.0f;
 	private float EngineRPM = 0.0f;
 
-	void  Awake ()
+	void Awake()
 	{
-		// !! code bourrin
-		if (!networkView.isMine) {
-			Destroy (this);
-		}
 	}
 
-	void  Start ()
+	void Start()
 	{
 		// I usually alter the center of mass to make the car more stable. I'ts less likely to flip this way.
 		rigidbody.centerOfMass += new Vector3 (0, -1f, .25f);
 	}
 
-	void  Update ()
+	void Update()
 	{
 	
 		// Compute the engine RPM based on the average RPM of the two wheels, then call the shift gear function

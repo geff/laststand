@@ -89,6 +89,8 @@ public class GameState : MonoBehaviour
 
 		while (this.currentPhase == Phase.Initialization)
 		{
+			// Check arrival of players
+			// TODO
 			yield return null;
 		}
 	}
