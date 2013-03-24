@@ -40,7 +40,7 @@ public class GUISkill : MonoBehaviour {
 			unicolor.SetPixel(0,0, overlay);
 			unicolor.wrapMode = TextureWrapMode.Repeat;
 			unicolor.Apply();
-			int result = (int)(width * (1.0f - getPercentage()));
+			int result = (int)Mathf.Clamp(width * (1.0f - getPercentage()), 0, width-7);
 //			Debug.Log("result width=" + result);
 			GUI.DrawTexture(new Rect(positionX, positionY+4, result, height-8), unicolor);
 			GUI.color = backup;
