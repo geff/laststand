@@ -21,6 +21,7 @@ public class Menu : MonoBehaviour
 
 	#region Login
 	string sUsername = "";
+	string sMasterServer = GameContext.MASTER_SERVER_IP_ADDRESS;
 	#endregion // Login
 
 	#region Host
@@ -104,7 +105,14 @@ public class Menu : MonoBehaviour
         this.sUsername = GUILayout.TextField(this.sUsername, 25, GUILayout.MinWidth(125));
 		GUILayout.EndHorizontal();
 
-        if (this.sUsername.Length != 0)
+        GUILayout.Label("-- Master Server --");
+
+		GUILayout.BeginHorizontal();
+        GUILayout.Label("IP");
+        this.sMasterServer = GUILayout.TextField(this.sMasterServer, 25, GUILayout.MinWidth(125));
+		GUILayout.EndHorizontal();
+
+        if (this.sUsername.Length != 0 && this.sMasterServer.Length > 7)
         {
             if (GUILayout.Button("Ok"))
             {
@@ -115,6 +123,13 @@ public class Menu : MonoBehaviour
 				this.m_context.tempPlayer = player;
 				// Goto main menu
 				this.state = MenuState.MainMenu;
+
+				if (!this.sMasterServer.Equals(GameContext.MASTER_SERVER_IP_ADDRESS))
+				{
+        			MasterServer.ipAddress = this.sMasterServer;
+					MasterServer.ClearHostList ();
+					MasterServer.RequestHostList (GameContext.GAME_TYPE_NAME);
+				}
             }
         }
 
