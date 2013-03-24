@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Hud : MonoBehaviour
 {
-	public int capacityWidth = 100; // The width of the capacity button/texture2D to be displayed in the HUD	
+	public const int capacityWidth = 50; // The width of the capacity button/texture2D to be displayed in the HUD	
 	public void Start() {
 		Debug.Log("HUD::Start()");
 		int i = 0;
@@ -69,7 +69,7 @@ public class Hud : MonoBehaviour
 	
 	public int alivePlayersWidth = 60;
 	public int alivePlayersHeight = 45;
-	public int elementsMargin = 10; // in pixels
+	public int elementsMargin = 8; // in pixels
 	
 	private void dispAlivePlayers(int n_alive) {
 		Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
