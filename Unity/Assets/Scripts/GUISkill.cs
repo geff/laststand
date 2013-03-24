@@ -11,35 +11,30 @@ public class GUISkill : MonoBehaviour {
 	private BaseCapacity capa;
 	
 	private bool isReady() {
-		if (100 == getPercentage()) {
+		if (1.0f <= getPercentage()) {
 			return true;
 		}
 		return false;
 	}
 	
-	private int getPercentage() { 
-		return (int)Mathf.Round((Time.time - capa.LastActivity) / capa.CoolDown);
+	private float getPercentage() { 
+//		Debug.Log("LastActivity::" + capa.LastActivity.ToString());
+		float result = Mathf.Clamp((Time.time - capa.LastActivity) / capa.CoolDown, 0.0f, 1.0f);
+//		Debug.Log("GUISkill::getPercentage()=" + result);
+		return result;
 	}
 	
 	public void display() {
-		Debug.Log("Blorg1");
 		if (isReady()) {
-			Debug.Log("Blorg3");
+//			Debug.Log("FFFFFFFF");
 			GUI.Label (new Rect (positionX, positionY, width, height), this.capa.GUIPicture);		
 		} else {
-			Debug.Log("Blorg2");
+//			Debug.Log("ABCABCABC");
 			GUI.Label (new Rect (positionX, positionY, width, height), this.capa.GUIPicture);		
-			Color backup = GUI.color;
-			Color overlay = new Color(0, 0, 0, 0.7f);
-			GUI.color = overlay;
-			//GUI.Label(new Rect(positionX, positionY, width * getPercentage(), height), "");
-			
-			var unicolor = new Texture2D(1, 1);
-			unicolor.SetPixel(0,0, overlay);
-			unicolor.wrapMode = TextureWrapMode.Repeat;
-			unicolor.Apply();
-			GUI.DrawTexture(new Rect(positionX, positionY, (int)(width * getPercentage() / 100.0), height), unicolor);
-			GUI.color = backup;
+			int result = (int)Mathf.Clamp(width * (1.0f - getPercentage()), 0, width-7);
+//			Debug.Log("result width=" + result);
+			Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
+			Hud.drawRectangle(overlay, new Rect(positionX, positionY+4, result, height-8));
 		}
 		
 	}
