@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [AddComponentMenu("Last Stand/Core/Game State")]
 /// <summary>
@@ -22,12 +23,19 @@ public class GameState : MonoBehaviour
 
 	private GameContext m_context;
 	private Arena m_arena;
+    private HashSet<int> m_synchronizedClients;
+
+    [HideInInspector]
+    public string countDown = "";
+    [HideInInspector]
+    public string message = "";
 
 	void Awake()
     {
 		// Cache references
 		this.m_context = GameSingleton.Instance.context;
 		this.m_arena = (Arena) GameObject.FindObjectOfType(typeof(Arena));
+		this.m_synchronizedClients = new HashSet<int>();
 	}
 
 	IEnumerator Start()
@@ -87,24 +95,51 @@ public class GameState : MonoBehaviour
 		// Create the local player
 		yield return StartCoroutine(SpawnPlayer());
 
+		// Server waits for all players before starting the game
+		if (Network.isServer)
+		{
+            // Executing warmup state
+            bool waitingPlayers = true;
+            while (waitingPlayers)
+            {
+                // Check wether all player are synchronized, or not
+                waitingPlayers = (this.m_synchronizedClients.Count < this.m_context.playerList.Count - 1);
+                yield return new WaitForFixedUpdate();
+            }
+
+            networkView.RPC("StartFight", RPCMode.OthersBuffered, (float) Network.time + 2.0f);
+            StartCoroutine(StartFight((float) Network.time + 2.0f));
+		}
+
 		while (this.currentPhase == Phase.Initialization)
 		{
-			// Check arrival of players
-			// TODO
+			// Wait for state to change
 			yield return null;
 		}
 	}
 
 	IEnumerator State_CountDown()
 	{
-		while (this.currentPhase == Phase.CountDown)
-		{
-			yield return null;
-		}
+		float seconds = 3;
+        while (seconds > 0)
+        {
+            // update GUI string
+            countDown = seconds.ToString();
+            --seconds;
+            yield return new WaitForSeconds(1.0f);
+        }
+        
+        countDown = "";
+
+		this.currentPhase = Phase.Fighting;
 	}
 
 	IEnumerator State_Fighting()
 	{
+		// Give control back to players
+		this.m_context.player.playerTank.SetPlayerControl(true);
+
+
 		while (this.currentPhase == Phase.Fighting)
 		{
 			yield return null;
@@ -127,6 +162,28 @@ public class GameState : MonoBehaviour
 		}
 	}
 	#endregion // Phases
+
+	#region Event Handlers
+	[RPC]
+	IEnumerator StartFight(float rendezvous)
+	{
+        // Re-initialize player in case all clients did not receive it
+        this.m_context.player.playerTank.networkView.RPC("InitializeController", RPCMode.Others, Network.player);
+        yield return null;
+
+        Debug.Log("StartFight: rendezvous = " + rendezvous);
+        float realRDV = matchToServerTime(rendezvous);
+        Debug.Log("StartFight: realDV = " + realRDV);
+
+        float delay = realRDV - (float) Network.time;
+        Debug.Log("StartFight: delay = " + delay);
+        if (delay > 0.0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+        this.currentPhase = Phase.CountDown;
+	}
+	#endregion // Event Handlers
 
 	/// <summary>
 	/// Spawn a prefab for the player to control it
@@ -177,6 +234,72 @@ public class GameState : MonoBehaviour
 		// Setup camera
 		Camera.main.GetComponent<SmoothFollow>().target = playerTank.transform;
 	}
+
+	#region Synchronization
+    // SYNCHRONIZATION SERVEUR <-> CLIENT
+    // STEP 1 : client ask for synch
+    // STEP 2 : serveur send ITS Network.time to the client
+    // STEP 3 : client receive and process : deltaTime = ServerNetwork.time + TransitTime - CLientNetworkTime
+    // STEP 4 : To synchronize further events, the server will ask to launch a event at time = x.
+    //          Client must launch it at (x - delta).
+
+    private float deltaTime = 0.0f;
+
+    /**
+    * The server tells the client to synchronize time.
+    */
+    // SERVER
+    [RPC]
+    void ClientReady(NetworkMessageInfo info)
+    {
+        Debug.Log("[ClientReady]: " + info.sender);
+        networkView.RPC("FindOutDeltaTime", info.sender, (float) Network.time);
+    }
+
+    // SERVER
+    [RPC]
+    void ClientSynchronized(NetworkMessageInfo info)
+    {
+        Debug.Log("[ClientSynchronized]: " + info.sender);
+        this.m_synchronizedClients.Add(info.sender.GetHashCode());
+    }
+
+    // CLIENT
+    void OnNetworkLevelLoaded()
+    {
+        if (Network.isClient)
+        {
+            Debug.Log("[OnNetworkLevelLoaded]: " + Network.player);
+            networkView.RPC("ClientReady", RPCMode.Server);
+        }
+    }
+
+    /**
+    * Calculating the server Network.time for synchronization
+    * @param serverTime A float reprensenting the Network.time of the server at the time this RPC was sent
+    * @param info Data structure containing information on a message
+    */
+    // CLIENT
+    [RPC]
+    void FindOutDeltaTime(float serverTime, NetworkMessageInfo info)
+    {
+        // deltaTime = (serverTime + (float) (Network.time - info.timestamp)) - (float) Network.time;
+        // Debug.Log("FindOutDeltaTime -deltaTime: "+deltaTime+" serverTime: "+serverTime+" info.timestamp:"+(float)info.timestamp   ) ;
+		deltaTime = (float) (serverTime - info.timestamp);
+        networkView.RPC("ClientSynchronized", RPCMode.Server);
+    }
+
+    /**
+    * Calculate the real time the server want us to use.
+    * @param localT the time we received from the server
+    * @return the time the server really meant
+    */
+    float matchToServerTime(float localT)
+    {
+        // Debug.Log("matchToServerTime - localT - deltaTime  ->   "+(localT - deltaTime)+" = "+localT+" - "+deltaTime) ;
+		return (localT - deltaTime);
+    }
+    #endregion
 
 }
 

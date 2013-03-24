@@ -22,10 +22,6 @@ public class PlayerCar : MonoBehaviour
 	public float MinEngineRPM = 1000.0f;
 	private float EngineRPM = 0.0f;
 
-	void Awake()
-	{
-	}
-
 	void Start()
 	{
 		// I usually alter the center of mass to make the car more stable. I'ts less likely to flip this way.
@@ -53,7 +49,7 @@ public class PlayerCar : MonoBehaviour
 		FrontRightWheel.motorTorque = EngineTorque / GearRatio [CurrentGear] * Input.GetAxis ("Vertical");
 		
 		// the steer angle is an arbitrary value multiplied by the user input.
-		FrontLeftWheel.steerAngle = 10 * Input.GetAxis ("Horizontal");
+		FrontLeftWheel.steerAngle = 12 * Input.GetAxis ("Horizontal");
 		FrontRightWheel.steerAngle = 10 * Input.GetAxis ("Horizontal");
 	}
 
