@@ -21,9 +21,9 @@ public class GrenadeBehaviour : MonoBehaviour
     {
         if (Time.time >= startTime + data.timer)
         {
-            foreach (PlayerData p in GameSingleton.Instance.context.playerList.Values)
+            foreach(VehicleController vh in GameObject.FindObjectsOfType(typeof(VehicleController)))
             {
-                VehicleController vh = p.playerTank;
+                //VehicleController vh = p.playerTank;
                 if (Vector3.Distance(vh.transform.position, myTransform.position) <= data.radius)
                 {
                     Debug.Log("Boum grenade " + Vector3.Distance(vh.transform.position, myTransform.position) + " <= " + data.radius);
