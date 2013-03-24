@@ -31,19 +31,10 @@ public class GUISkill : MonoBehaviour {
 		} else {
 //			Debug.Log("ABCABCABC");
 			GUI.Label (new Rect (positionX, positionY, width, height), this.capa.GUIPicture);		
-			Color backup = GUI.color;
-			Color overlay = new Color(0, 0, 0, 0.7f);
-			GUI.color = overlay;
-			//GUI.Label(new Rect(positionX, positionY, width * getPercentage(), height), "");
-			
-			var unicolor = new Texture2D(1, 1);
-			unicolor.SetPixel(0,0, overlay);
-			unicolor.wrapMode = TextureWrapMode.Repeat;
-			unicolor.Apply();
 			int result = (int)Mathf.Clamp(width * (1.0f - getPercentage()), 0, width-7);
 //			Debug.Log("result width=" + result);
-			GUI.DrawTexture(new Rect(positionX, positionY+4, result, height-8), unicolor);
-			GUI.color = backup;
+			Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
+			Hud.drawRectangle(overlay, new Rect(positionX, positionY+4, result, height-8));
 		}
 		
 	}
