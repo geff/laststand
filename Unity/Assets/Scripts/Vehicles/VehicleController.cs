@@ -11,6 +11,19 @@ public class VehicleController : MonoBehaviour
     public int Life;
     public int MaxLife;
 
+	private PlayerCar m_car;
+
+	void Awake()
+	{
+		this.m_car = GetComponent<PlayerCar>();
+
+		if (!networkView.isMine)
+		{
+			this.enabled = false;
+			this.m_car.enabled = false;
+		}
+	}
+
     // Use this for initialization
     void Start()
     {
@@ -29,16 +42,39 @@ public class VehicleController : MonoBehaviour
         {
             BaseCapacity capacity = capacities[key];
 
-            if (Input.GetKey(key) && capacity.enabled && (Time.time - capacity.LastActivity) > capacity.CoolDown)
+            if (capacity.enabled && (Time.time - capacity.LastActivity) > capacity.CoolDown && Input.GetKey(key) && capacity.enabled)
             {
                 capacity.ApplyCapacity();
+				networkView.RPC("DoAction", RPCMode.Others, key);
             }
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Life -= damage;
+        if (Life < 0)
+            Life = 0;
     }
 
 	[RPC]
 	internal void InitializeController(NetworkPlayer owner)
 	{
+		// Disable update on this script.
+		this.enabled = false;
+	}
 
+	[RPC]
+	internal void DoAction(string key)
+	{
+		BaseCapacity capacity;
+		if (this.capacities.TryGetValue(key, out capacity))
+		{
+			// FIXME: synchronize network time
+			if (capacity.enabled)
+			{
+				capacity.ApplyCapacity();
+			}
+		}
 	}
 }

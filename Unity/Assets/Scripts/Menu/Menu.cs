@@ -16,6 +16,7 @@ public class Menu : MonoBehaviour
 {
 	public MenuState state = MenuState.None;
 
+	private AssetHolder m_assetHolder;
 	private GameContext m_context;
 
 	#region Login
@@ -45,8 +46,17 @@ public class Menu : MonoBehaviour
 	void Start()
 	{
 		this.sUsername = "";
+		// Get the asset holder and cache the reference
+		this.m_assetHolder = GameSingleton.Instance.assetHolder;
 		// Get the game context and cache the reference
 		this.m_context = GameSingleton.Instance.context;
+	}
+
+	void OnDestroy()
+	{
+		this.m_assetHolder = null;
+		this.m_context= null;
+		this.selectedHost = null;
 	}
 
 	#region GUI
@@ -163,8 +173,8 @@ public class Menu : MonoBehaviour
 			if (this.nConnectPort > 0 && this.nMaxPlayerNumber > 1 && GUILayout.Button("Create!"))
 			{
 				// Start a server for playerMaxNumber clients using the "connectPort" given via the GUI
-                bool useNat = !Network.HavePublicAddress();
-                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 1, 8) - 1, nConnectPort, useNat);
+//                bool useNat = !Network.HavePublicAddress();
+                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
 
                 if (string.IsNullOrEmpty(this.sGameName))
                 {
@@ -331,7 +341,22 @@ public class Menu : MonoBehaviour
 			this.m_context.player.ready = true;
 
 			// Get the prefab
-			this.m_context.player.playerTank = (GameObject) Resources.Load("VehiclePrefab");
+			VehicleController playerTank = null;
+			switch (this.m_context.player.lastTankType)
+			{
+			case TankType.Light:
+				playerTank = (VehicleController) this.m_assetHolder.lightTank;
+				break;
+
+			case TankType.Medium:
+				playerTank = (VehicleController) this.m_assetHolder.mediumTank;
+				break;
+
+			case TankType.Heavy:
+				playerTank = (VehicleController) this.m_assetHolder.heavyTank;
+				break;
+			}
+			this.m_context.player.playerTank = playerTank;
 		}
 	}
 
@@ -356,7 +381,7 @@ public class Menu : MonoBehaviour
 					// Don't allow any more players
         			Network.maxConnections = -1;
 					// Unregister to prevent new players from coming
-					MasterServer.UnregisterHost();
+//					MasterServer.UnregisterHost();
 					// Disable menu
 					this.state = MenuState.None;
 					// Start level

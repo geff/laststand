@@ -21,11 +21,13 @@ public class GameState : MonoBehaviour
 	public Phase currentPhase = Phase.Initialization;
 
 	private GameContext m_context;
+	private Arena m_arena;
 
 	void Awake()
     {
 		// Cache references
 		this.m_context = GameSingleton.Instance.context;
+		this.m_arena = (Arena) GameObject.FindObjectOfType(typeof(Arena));
 	}
 
 	IEnumerator Start()
@@ -87,6 +89,8 @@ public class GameState : MonoBehaviour
 
 		while (this.currentPhase == Phase.Initialization)
 		{
+			// Check arrival of players
+			// TODO
 			yield return null;
 		}
 	}
@@ -131,15 +135,18 @@ public class GameState : MonoBehaviour
 	IEnumerator SpawnPlayer()
 	{
 		Transform spawn = this.transform;
-		// TODO get the correct spawn position
+		if (this.m_arena != null)
+		{
+			spawn = this.m_arena.spawnPoints[this.m_context.player.playerID];
+		}
 
+		VehicleController playerTank = null;
 		// We are in a multiplayer game
 		if (Network.isClient || Network.isServer)
 		{
 			// Instantiate a new object for this player, remember
             // static function Instantiate (prefab : Object, position : Vector3, rotation : Quaternion, group : int) : Object
-            GameObject playerTank =
-                (GameObject) Network.Instantiate(this.m_context.player.playerTank, spawn.position, Quaternion.identity, 0);
+            playerTank = (VehicleController) Network.Instantiate(this.m_context.player.playerTank, spawn.position, Quaternion.identity, 0);
 			// Replace the prefab reference with the instantiated tank
             this.m_context.player.playerTank = playerTank;
 			// Wait two frames (basically, wait for Awake and Start method to be called on the instantiated prefab)
@@ -147,15 +154,28 @@ public class GameState : MonoBehaviour
             yield return null;
 
             playerTank.networkView.RPC("InitializeController", RPCMode.Others, Network.player);
-			playerTank.GetComponent<VehicleController>().InitializeController(Network.player);
-
-			// Setup camera
-			Camera.main.GetComponent<SmoothFollow>().target = playerTank.transform;
 		}
 		else
 		{
-			Debug.LogError("[GameState]: Solo mode not yet available!");
+			// Instantiate a new object for this player, remember
+            // static function Instantiate (prefab : Object, position : Vector3, rotation : Quaternion, group : int) : Object
+            playerTank = (VehicleController) Instantiate(this.m_context.player.playerTank, spawn.position, Quaternion.identity);
+			// Replace the prefab reference with the instantiated tank
+            this.m_context.player.playerTank = playerTank;
+			// Wait two frames (basically, wait for Awake and Start method to be called on the instantiated prefab)
+            yield return null;
+            yield return null;
 		}
+
+		if (playerTank == null)
+		{
+			Debug.LogError("[SpawnPlayer]: Fatal Error!");
+			yield break;
+		}
+
+		playerTank.GetComponent<VehicleController>().InitializeController(Network.player);
+		// Setup camera
+		Camera.main.GetComponent<SmoothFollow>().target = playerTank.transform;
 	}
 
 }

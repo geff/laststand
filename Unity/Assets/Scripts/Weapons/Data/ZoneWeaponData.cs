@@ -4,7 +4,8 @@ using System.Collections;
 [System.Serializable]
 public class ZoneWeaponData : BaseWeaponData
 {
-	public float damage;
+	public int damage;
 	public float radius;
 	public float speed;
+    public float timer;
 }

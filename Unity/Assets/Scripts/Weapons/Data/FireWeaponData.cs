@@ -4,6 +4,8 @@ using System.Collections;
 [System.Serializable]
 public class FireWeaponData : BaseWeaponData
 {
-	public float damage;
+	public int damage;
 	public float range;
+    public float speed;
+    public float weight;
 }

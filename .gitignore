@@ -8,6 +8,15 @@
 *.sln
 *.suo
 
+# Others
 Unity.userprefs
-Assembly-CSharp*.pidb
 *.pidb
+
+# Archive
+*.7z
+*.bz2
+*.gz
+*.tar
+*.tgz
+*.rar
+*.zip
