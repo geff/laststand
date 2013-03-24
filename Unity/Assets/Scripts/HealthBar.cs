@@ -3,8 +3,9 @@ using System.Collections;
 
 public class HealthBar : MonoBehaviour {
 	
-	public int maxWidth = 200;// pixels
-	public int height = 40; // pixels
+	public const int maxWidth = 40;// pixels
+	public const int height = 6; // pixels
+	public const int offsetX = -17, offsetY = 120;
 	
 	public VehicleController vehicle;
 	static private Color lowHPColor = new Color(1, 0, 0, 1);
@@ -29,8 +30,8 @@ public class HealthBar : MonoBehaviour {
 		} else {
 			c = normalHPColor;
 		}
-		Vector3 pos = Camera.mainCamera.ViewportToScreenPoint(tr.position); // TODO find the actual right function to do that
-		Rect r = new Rect(pos.y, pos.z, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
+		Vector3 pos = Camera.mainCamera.WorldToScreenPoint(tr.position);
+		Rect r = new Rect(pos.x + offsetX, pos.z + offsetY, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
 		Hud.drawRectangle(c, r);
 	}
 }
