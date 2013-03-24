@@ -61,7 +61,7 @@ public class VehicleController : MonoBehaviour
 	internal void InitializeController(NetworkPlayer owner)
 	{
 		// Disable update on this script.
-		this.enabled = false;
+//		this.enabled = false;
 	}
 
 	[RPC]
