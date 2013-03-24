@@ -64,6 +64,7 @@ public class VehicleController : MonoBehaviour
         }
     }
 
+    [RPC]
     public void TakeDamage(int damage)
     {
         Life -= damage;
