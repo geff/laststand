@@ -26,10 +26,16 @@ public class Hud : MonoBehaviour
 		{
 			return;
 		}
+		
 		if (null != GameSingleton.Instance.gameState && GameSingleton.Instance.gameState.currentPhase == GameState.Phase.CountDown) {
 			// TODO display thinngs
-			// GameSingleton.Instance.gameState.countDown
+			var screen = new Rect(0,0,Screen.width, Screen.height);
+			Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
+			Hud.drawRectangle(overlay, screen);
+			GUI.Label(screen, GameSingleton.Instance.gameState.countDown);
 		}
+		
+		
 		// start debug code
 		int i = 0;
 //		skills = new List<GUISkill>();
