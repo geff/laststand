@@ -16,6 +16,7 @@ public class Menu : MonoBehaviour
 {
 	public MenuState state = MenuState.None;
 
+	private AssetHolder m_assetHolder;
 	private GameContext m_context;
 
 	#region Login
@@ -45,8 +46,17 @@ public class Menu : MonoBehaviour
 	void Start()
 	{
 		this.sUsername = "";
+		// Get the asset holder and cache the reference
+		this.m_assetHolder = GameSingleton.Instance.assetHolder;
 		// Get the game context and cache the reference
 		this.m_context = GameSingleton.Instance.context;
+	}
+
+	void OnDestroy()
+	{
+		this.m_assetHolder = null;
+		this.m_context= null;
+		this.selectedHost = null;
 	}
 
 	#region GUI
@@ -335,15 +345,15 @@ public class Menu : MonoBehaviour
 			switch (this.m_context.player.lastTankType)
 			{
 			case TankType.Light:
-				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().lightTank);
+				playerTank = (VehicleController) this.m_assetHolder.lightTank;
 				break;
 
 			case TankType.Medium:
-				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().mediumTank);
+				playerTank = (VehicleController) this.m_assetHolder.mediumTank;
 				break;
 
 			case TankType.Heavy:
-				playerTank = (VehicleController) (((GameObject)Resources.Load("AssetHolder")).GetComponent<AssetHolder>().heavyTank);
+				playerTank = (VehicleController) this.m_assetHolder.heavyTank;
 				break;
 			}
 			this.m_context.player.playerTank = playerTank;

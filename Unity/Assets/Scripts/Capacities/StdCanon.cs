@@ -19,6 +19,6 @@ public class StdCanon : BaseCapacity {
         base.ApplyCapacity();
 
         Rigidbody projectile = Instantiate(bullet, canon.position, canon.rotation) as Rigidbody;
-        projectile.AddForce(canon.forward * data.speed);
+        projectile.AddForce(canon.forward * data.speed + ParentVehicle.rigidbody.velocity);
     }
 }

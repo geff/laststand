@@ -12,7 +12,7 @@ public class GrenadeLauncher : BaseCapacity
         base.ApplyCapacity();
 
         Rigidbody projectile = Instantiate(grenade, canon.position, canon.rotation) as Rigidbody;
-        projectile.AddForce(canon.forward * 1000 + canon.up * 2);
+        projectile.AddForce(canon.forward * 1000 + canon.up * 2 + ParentVehicle.rigidbody.velocity);
     }
 }
 
