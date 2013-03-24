@@ -153,7 +153,7 @@ public class GameState : MonoBehaviour
 
 	IEnumerator State_EndOfFight()
 	{
-		networkView.RPC("DieHard", RPCMode.Others, Network.player);
+		networkView.RPC("DieHard3", RPCMode.Others, Network.player);
 		yield return StartCoroutine(DieHard(Network.player));
 
 		if (Network.isClient)
@@ -265,6 +265,9 @@ public class GameState : MonoBehaviour
 	}
 
 	[RPC]
+	void DieHard3(NetworkPlayer owner) {
+		StartCoroutine(DieHard(owner));
+	}
 	IEnumerator DieHard(NetworkPlayer owner)
 	{
 		Transform t = null;
