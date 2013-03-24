@@ -5,6 +5,15 @@ public class VehicleTurret : MonoBehaviour {
 
     private Transform myTransform;
 
+
+	void Awake()
+	{
+		if (!networkView.isMine)
+		{
+			this.enabled = false;
+		}
+	}
+
 	// Use this for initialization
 	void Start ()
     {
