@@ -142,7 +142,7 @@ public class GameState : MonoBehaviour
 
 		while (this.currentPhase == Phase.Fighting)
 		{
-			if (playerTransform.position.y < -10.0f)
+			if (this.m_context.player.playerTank.Life <= 0 || playerTransform.position.y < -10.0f)
 			{
 				Camera.main.GetComponent<SmoothFollow>().target = null;
 				this.currentPhase = Phase.EndOfFight;
