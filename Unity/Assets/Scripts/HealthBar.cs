@@ -34,7 +34,7 @@ public class HealthBar : MonoBehaviour {
 //		Debug.Log(trpos);
 //		Debug.Log(Camera.mainCamera.rect);
 		Vector3 pos = Camera.mainCamera.WorldToViewportPoint(trpos);
-		if (pos.x < 0 || pos.y < 0 || pos.z < 0) {// if the thing is not in the screen, do not display it
+		if (pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x > Screen.height || pos.y > Screen.width) {// if the thing is not in the screen, do not display it
 			return;
 		}
 //		Debug.Log(pos);
