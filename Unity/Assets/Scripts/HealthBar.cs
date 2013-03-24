@@ -12,6 +12,7 @@ public class HealthBar : MonoBehaviour {
 	private Transform tr = null;
 	// Use this for initialization
 	void Start () {
+		vehicle = GetComponent<VehicleController>();
 		tr = vehicle.transform; // not to do it inside the main ONGUI loop
 	}
 	
@@ -28,7 +29,7 @@ public class HealthBar : MonoBehaviour {
 		} else {
 			c = normalHPColor;
 		}
-		Vector3 pos = tr.localPosition;
+		Vector3 pos = Camera.mainCamera.ViewportToScreenPoint(tr.position); // TODO find the actual right function to do that
 		Rect r = new Rect(pos.y, pos.z, ((int)maxWidth * ratio), height); // TODO fine adjustment of halthbar positioning
 		Hud.drawRectangle(c, r);
 	}
