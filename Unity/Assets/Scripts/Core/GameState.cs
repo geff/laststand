@@ -182,6 +182,7 @@ public class GameState : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
         this.currentPhase = Phase.CountDown;
+		this.m_context.player.currentState = PlayerState.Playing;
 	}
 	#endregion // Event Handlers
 
