@@ -309,7 +309,7 @@ public class GameContext : MonoBehaviour
 		this.playerList.Clear ();
 
 		// Load the default scene
-		// TODO...
+		Application.LoadLevel("Menu");
 	}
     #endregion
 
@@ -409,6 +409,13 @@ public class GameContext : MonoBehaviour
 		} else {
 			Debug.LogError ("[TankChoice]: unknown player");
 		}
+	}
+
+	[RPC]
+	void RemovePlayer(NetworkPlayer sender)
+	{
+		// Clean up player in all clients
+		this.playerList.Remove (player.GetHashCode ());
 	}
 }
 
