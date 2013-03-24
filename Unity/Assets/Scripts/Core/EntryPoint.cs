@@ -19,8 +19,10 @@ public class EntryPoint : MonoBehaviour
 	{
 		// Get the game singleton to make sure it is initialized here in the first scene
 		GameSingleton singleton = GameSingleton.Instance;
-	
 	}
+
+	bool bShowMessage;
+	string sMessage = "";
 	
 	IEnumerator Start()
 	{
@@ -31,11 +33,15 @@ public class EntryPoint : MonoBehaviour
 		{
 		case SceneMode.Title:
 			// Show splash screen
-			yield return new WaitForSeconds(1.0f);
+			yield return new WaitForSeconds(2.0f);
+			// Show message
+			this.bShowMessage = true;
+			this.sMessage = "Press any key to continue ...";
 			while (!Input.anyKey)
 			{
 				yield return null;
 			}
+			this.bShowMessage = false;
 			// Go to the menu
 			Application.LoadLevel("Menu");
 			break;
@@ -52,6 +58,14 @@ public class EntryPoint : MonoBehaviour
 			break;
 		default:
 			break;
+		}
+	}
+
+	void OnGUI()
+	{
+		if (this.bShowMessage)
+		{
+			GUILayout.Label(this.sMessage);
 		}
 	}
 	
