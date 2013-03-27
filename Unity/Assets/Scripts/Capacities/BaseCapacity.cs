@@ -8,24 +8,32 @@ public abstract class BaseCapacity : MonoBehaviour
     /// Cooldown en secondes
     /// </summary>
     public float CoolDown;
+    [HideInInspector]
     public float LastActivity;
-    public string Key;
-    public string CapacityName;
+    public KeyCode Key;
     public Texture2D GUIPicture;
     public AudioClip Sound;
     public int Volume;
     public string AnimationName;
 
-    //[HideInInspector]
+    [HideInInspector]
     public VehicleController ParentVehicle;
 
     private Transform myTransform;
     private Transform mesh;
     private float lastSoundPlaying = 0f;
 
+    public bool Cooling
+    {
+        get
+        {
+            return (Time.time - this.LastActivity) < this.CoolDown;
+        }
+    }
+
     public void Start()
     {
-        myTransform = transform;
+        myTransform = this.transform;
         this.ParentVehicle = this.transform.gameObject.GetComponentInChildren<VehicleController>();
         this.mesh = this.transform.FindChild("Mesh");
         this.LastActivity = -this.CoolDown;
@@ -34,7 +42,7 @@ public abstract class BaseCapacity : MonoBehaviour
     public virtual void ApplyCapacity()
     {
         this.LastActivity = Time.time;
-
+        
         if (Sound != null && (Time.time - lastSoundPlaying > Sound.length))
         {
             AudioSource.PlayClipAtPoint(Sound, myTransform.position, Volume);
@@ -45,7 +53,7 @@ public abstract class BaseCapacity : MonoBehaviour
         {
             this.mesh.animation.Play(this.AnimationName);
         }
-
-        Debug.Log(this.CapacityName + " " + this.LastActivity.ToString());
+        
+        //Debug.Log(this.CapacityName + " " + this.LastActivity.ToString());
     }
 }

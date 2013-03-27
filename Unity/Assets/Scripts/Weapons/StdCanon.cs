@@ -9,6 +9,11 @@ public class StdCanon : BaseCapacity {
 
     private Transform canonTransform;
 
+    public StdCanon()
+    {
+        this.Key = KeyCode.Mouse0;
+    }
+
     void Awake()
     {
         CoolDown = data.coolDown;

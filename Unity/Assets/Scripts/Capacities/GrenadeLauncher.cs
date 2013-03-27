@@ -7,6 +7,11 @@ public class GrenadeLauncher : BaseCapacity
     public Rigidbody grenade;
     public Transform canon;
 
+    public GrenadeLauncher()
+    {
+        this.Key = KeyCode.Mouse1;
+    }
+
     public override void ApplyCapacity()
     {
         base.ApplyCapacity();
