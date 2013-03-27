@@ -117,7 +117,8 @@ public class VehicleController : MonoBehaviour
         //---> Orientation de la tourelle
         Vector2 angleVec = new Vector3(target.x - this.transform.position.x, target.z - this.transform.position.z);
         float angle = Mathf.Atan2(angleVec.x, angleVec.y) * Mathf.Rad2Deg;
-        this.gameObject.GetComponentInChildren<VehicleTurret>().transform.rotation = Quaternion.Euler(new Vector3(0, angle - 90, -90));
+
+        this.gameObject.GetComponentInChildren<VehicleTurret>().RotateTurret(angle);
 
         StdCanon canon = this.gameObject.GetComponent<StdCanon>();
 

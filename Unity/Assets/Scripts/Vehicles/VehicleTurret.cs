@@ -3,7 +3,8 @@ using System.Collections;
 
 public class VehicleTurret : MonoBehaviour {
 
-    private Transform myTransform;
+    public Transform myTransform;
+    private Vector3 _originalRotation = Vector3.zero;
 
 	void Awake()
 	{
@@ -17,6 +18,7 @@ public class VehicleTurret : MonoBehaviour {
 	void Start ()
     {
         myTransform = transform;
+        _originalRotation = this.transform.localEulerAngles;
 	}
 	
 	// Update is called once per frame
@@ -35,7 +37,11 @@ public class VehicleTurret : MonoBehaviour {
         mousePosition.x = mousePosition.x - turretPosition.x;
         mousePosition.y = mousePosition.y - turretPosition.y;
         angle = Mathf.Atan2(mousePosition.x, mousePosition.y) * Mathf.Rad2Deg;
-        myTransform.rotation = Quaternion.Euler(new Vector3(0, angle-90, -90));
+        this.RotateTurret(angle);
     }
 
+    public void RotateTurret(float angle)
+    {
+        myTransform.rotation = Quaternion.Euler(new Vector3(0 + _originalRotation.x, angle - 90 + _originalRotation.y, -90 + _originalRotation.z));
+    }
 }

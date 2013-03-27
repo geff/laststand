@@ -35,10 +35,12 @@ public class DoomedIA : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //---> Une IA ne peut être contrôlée par le joueur. Toutes les capacités ainsi que la tourelle sont désactivées
         if (!init)
         {
             this.ParentVehicle.SetCapacitiesActivation(false);
             this.gameObject.GetComponentInChildren<VehicleTurret>().enabled = false;
+
             init = true;
         }
 
@@ -57,11 +59,11 @@ public class DoomedIA : MonoBehaviour
 
                 nextPosition = new Vector3(Mathf.Cos(angle) * newDistance, this.ParentVehicle.transform.position.y, Mathf.Sin(angle) * newDistance);
                 
-                //--- Oriente le v"hicule dans la direction de déplacement
+                //--- Oriente le véhicule dans la direction du déplacement
                 if (nextPosition.magnitude < 130f)
                 {
                     inArena = true;
-                    transform.rotation = Quaternion.LookRotation(previousPosition - nextPosition); ;
+                    transform.rotation = Quaternion.LookRotation(nextPosition - previousPosition);
                 }
             }
         }

@@ -51,7 +51,7 @@ public abstract class BaseCapacity : MonoBehaviour
 
         if (!String.IsNullOrEmpty(this.AnimationName) && this.mesh != null)
         {
-            this.mesh.animation.Play(this.AnimationName);
+            this.mesh.animation.Blend(this.AnimationName);
         }
         
         //Debug.Log(this.CapacityName + " " + this.LastActivity.ToString());

@@ -9,6 +9,8 @@ public class PlayerCar : MonoBehaviour
 	public WheelCollider FrontLeftWheel;
 	public WheelCollider FrontRightWheel;
 
+    public float SteerRatio = 10f;
+
 	// These variables are for the gears, the array is the list of ratios. The script
 	// uses the defined gear ratios to determine how much torque to apply to the wheels.
 	public float[] GearRatio;
@@ -49,8 +51,8 @@ public class PlayerCar : MonoBehaviour
 		FrontRightWheel.motorTorque = EngineTorque / GearRatio [CurrentGear] * Input.GetAxis ("Vertical");
 		
 		// the steer angle is an arbitrary value multiplied by the user input.
-		FrontLeftWheel.steerAngle = 12 * Input.GetAxis ("Horizontal");
-		FrontRightWheel.steerAngle = 12 * Input.GetAxis ("Horizontal");
+        FrontLeftWheel.steerAngle = SteerRatio * Input.GetAxis("Horizontal");
+        FrontRightWheel.steerAngle = SteerRatio * Input.GetAxis("Horizontal");
 	}
 
 	void  ShiftGears ()
