@@ -1,3 +1,5 @@
+//#define CUSTOM_MASTER_SERVER
+
 using UnityEngine;
 using System.Collections;
 
@@ -22,7 +24,9 @@ public class Menu : MonoBehaviour
 
 	#region Login
 	string sUsername = "";
+#if CUSTOM_MASTER_SERVER
 	string sMasterServer = GameContext.MASTER_SERVER_IP_ADDRESS;
+#endif
 	#endregion // Login
 
 	#region Host
@@ -149,7 +153,7 @@ public class Menu : MonoBehaviour
         GUILayout.Label("User name");
         this.sUsername = GUILayout.TextField(this.sUsername, 25, GUILayout.MinWidth(125));
 		GUILayout.EndHorizontal();
-
+#if CUSTOM_MASTER_SERVER
         GUILayout.Label("-- Master Server --");
 
 		GUILayout.BeginHorizontal();
@@ -158,9 +162,32 @@ public class Menu : MonoBehaviour
 		GUILayout.EndHorizontal();
 
         if (this.sUsername.Length != 0 && this.sMasterServer.Length > 7)
+#else
+
+        if (this.sUsername.Length != 0)
+#endif
         {
-            if (GUILayout.Button("Ok"))
-            {
+			GUILayout.BeginHorizontal();
+	        if (GUILayout.Button("Single Player"))
+	        {
+				this.m_context.gameMode = GameMode.Solo;
+
+				// Create the player
+				PlayerData player = new PlayerData();
+				player.username = this.sUsername;
+				player.currentState = PlayerState.Ready;
+				// Give it to the game context
+				this.m_context.tempPlayer = player;
+				// Load the scene directly
+				Application.LoadLevel("Arena");
+	        }
+	        GUILayout.EndHorizontal();
+	
+			GUILayout.BeginHorizontal();
+	        if (GUILayout.Button("Multiplayer"))
+	        {
+				this.m_context.gameMode = GameMode.Multi;
+
 				// Create the player
 				PlayerData player = new PlayerData();
 				player.username = this.sUsername;
@@ -169,26 +196,17 @@ public class Menu : MonoBehaviour
 				// Goto main menu
 				this.state = MenuState.MainMenu;
 
+#if CUSTOM_MASTER_SERVER
 				if (!this.sMasterServer.Equals(GameContext.MASTER_SERVER_IP_ADDRESS))
 				{
         			MasterServer.ipAddress = this.sMasterServer;
 					MasterServer.ClearHostList ();
 					MasterServer.RequestHostList (GameContext.GAME_TYPE_NAME);
 				}
-            }
+#endif
+	        }
+	        GUILayout.EndHorizontal();
         }
-
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Auto host"))
-        {
-            this.sUsername = "AutoHostUser";
-            this.sGameName = "AutoHostRoom";
-
-            NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
-            MasterServer.RegisterHost(GameContext.GAME_TYPE_NAME, this.sGameName);
-            this.state = MenuState.SelectTank;
-        }
-        GUILayout.EndHorizontal();
 
 		GUILayout.FlexibleSpace();
 		GUILayout.EndVertical();

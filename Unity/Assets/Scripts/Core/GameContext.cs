@@ -375,8 +375,6 @@ public class GameContext : MonoBehaviour
 
 	internal void StartLevel ()
 	{
-		// FIXME: game mode
-		this.gameMode = GameMode.Multi;
 		if (Network.isClient) {
 			return;
 		}
