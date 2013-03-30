@@ -178,6 +178,18 @@ public class Menu : MonoBehaviour
             }
         }
 
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Auto host"))
+        {
+            this.sUsername = "AutoHostUser";
+            this.sGameName = "AutoHostRoom";
+
+            NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
+            MasterServer.RegisterHost(GameContext.GAME_TYPE_NAME, this.sGameName);
+            this.state = MenuState.SelectTank;
+        }
+        GUILayout.EndHorizontal();
+
 		GUILayout.FlexibleSpace();
 		GUILayout.EndVertical();
 	}
@@ -403,7 +415,7 @@ public class Menu : MonoBehaviour
 
 			// Get the prefab
 			VehicleController playerTank = null;
-			switch (this.m_context.player.lastTankType)
+            switch ((TankType)this.nTankID)
 			{
 			case TankType.Light:
 				playerTank = this.m_assetHolder.lightTank;
