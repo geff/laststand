@@ -29,12 +29,12 @@ public class BaseBehaviour : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        other.transform.root.rigidbody.AddForce(myTransform.forward * 50 * (data.weight / 10));
         var vh = other.transform.root.GetComponent<VehicleController>();
         if (vh != null)
         {
             vh.TakeDamage(data.damage);
             vh.networkView.RPC("TakeDamage", RPCMode.Others, data.damage);
+            vh.transform.root.rigidbody.AddForce(myTransform.forward * 500 * (data.weight / 10));
         }
         Destroy(gameObject);
     }

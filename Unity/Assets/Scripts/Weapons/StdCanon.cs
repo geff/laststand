@@ -8,6 +8,7 @@ public class StdCanon : BaseCapacity {
     public FireWeaponData data;
 
     private Transform canonTransform;
+    public BoxCollider hitbox;
 
     public StdCanon()
     {
@@ -24,6 +25,7 @@ public class StdCanon : BaseCapacity {
         base.ApplyCapacity();
 
         Rigidbody projectile = Instantiate(bullet, canon.position, canon.rotation) as Rigidbody;
+        Physics.IgnoreCollision(hitbox, projectile.collider);
         projectile.AddForce(canon.forward * data.speed + ParentVehicle.rigidbody.velocity);
     }
 }

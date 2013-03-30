@@ -14,8 +14,11 @@ public class VehicleController : MonoBehaviour
     private PlayerCar m_car;
     public bool IsDebug = false;
 
+    private WheelCollider[] wheelColliders;
+
     void Awake()
     {
+        wheelColliders = GetComponentsInChildren<WheelCollider>();
         this.m_car = GetComponent<PlayerCar>();
 
         // This script should never be updated for proxies.
@@ -65,12 +68,44 @@ public class VehicleController : MonoBehaviour
         }
     }
 
+   /* public void OnCollisionEnter(Collision other)
+    {
+        if(other.gameObject.tag != "Ground")
+            StartCoroutine(Derapage());
+    }*/
+
+
     [RPC]
     public void TakeDamage(int damage)
     {
         Life -= damage;
         if (Life < 0)
             Life = 0;
+    }
+
+    private WheelFrictionCurve sidewayFriction;
+    IEnumerator Derapage()
+    {
+        foreach(WheelCollider wc in wheelColliders)
+        {
+            sidewayFriction = wc.sidewaysFriction;
+            sidewayFriction.extremumValue = 20;
+            wc.sidewaysFriction = sidewayFriction;
+        }
+
+        float fStart = Time.time;
+        float fPassed = 0.0f;
+
+        do {
+            foreach(WheelCollider wc in wheelColliders)
+            {
+                sidewayFriction = wc.sidewaysFriction;
+                sidewayFriction.extremumValue = Mathf.Lerp(20, 400, fPassed);
+                wc.sidewaysFriction = sidewayFriction;
+            }
+            fPassed = (Time.time - fStart) / Mathf.Abs(transform.InverseTransformDirection(rigidbody.velocity).x)*0.5f;
+            yield return null;
+        } while (fPassed < 1.0f);
     }
 
     internal void SetPlayerControl(bool isControlledByPlayer)
