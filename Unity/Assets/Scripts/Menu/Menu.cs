@@ -10,6 +10,7 @@ public enum MenuState
 	JoinGame,
 	SelectTank,
 	StartOrWait,
+	Pause,
 }
 
 public class Menu : MonoBehaviour
@@ -60,6 +61,34 @@ public class Menu : MonoBehaviour
 		this.selectedHost = null;
 	}
 
+	void Update()
+	{
+		switch (this.state)
+		{
+		case MenuState.None:
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				this.state = MenuState.Pause;
+				if (this.m_context.gameMode == GameMode.Solo)
+				{
+					Time.timeScale = 0.0f;
+				}
+			}
+			break;
+
+		case MenuState.Pause:
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				this.state = MenuState.None;
+				if (this.m_context.gameMode == GameMode.Solo)
+				{
+					Time.timeScale = 1.0f;
+				}
+			}
+			break;
+		}
+	}
+
 	#region GUI
 	void OnGUI()
 	{
@@ -88,12 +117,28 @@ public class Menu : MonoBehaviour
 		case MenuState.StartOrWait:
 			Menu_StartOrWait();
 			break;
+
+		case MenuState.Pause:
+			switch (this.m_context.gameMode)
+			{
+			case GameMode.Multi:
+				Menu_Pause_Multi();
+				break;
+
+			default:
+			case GameMode.Solo:
+				Menu_Pause_Solo();
+				break;
+			}
+			break;
+
 		default:
+		case MenuState.None:
 			break;
 		}
 	}
 
-	void Menu_Login()
+	private void Menu_Login()
 	{
 		GUILayout.BeginVertical();
 		GUILayout.FlexibleSpace();
@@ -137,7 +182,7 @@ public class Menu : MonoBehaviour
 		GUILayout.EndVertical();
 	}
 
-	void Menu_Main()
+	private void Menu_Main()
 	{
 		GUILayout.BeginVertical();
 		GUILayout.FlexibleSpace();
@@ -163,7 +208,7 @@ public class Menu : MonoBehaviour
 		GUILayout.EndVertical();
 	}
 
-	void Menu_Host()
+	private void Menu_Host()
 	{
         if (Network.peerType == NetworkPeerType.Disconnected)
         {
@@ -216,7 +261,7 @@ public class Menu : MonoBehaviour
 		}
 	}
 
-	void Menu_Join()
+	private void Menu_Join()
 	{
         if (Network.peerType == NetworkPeerType.Disconnected)
         {
@@ -323,7 +368,7 @@ public class Menu : MonoBehaviour
 		}
 	}
 
-	void Menu_SelectTank()
+	private void Menu_SelectTank()
 	{
 		if (GUILayout.Button("Light Tank"))
 		{
@@ -376,7 +421,7 @@ public class Menu : MonoBehaviour
 		}
 	}
 
-	void Menu_StartOrWait()
+	private void Menu_StartOrWait()
 	{
 		if (Network.isServer)
 		{
@@ -412,6 +457,30 @@ public class Menu : MonoBehaviour
 		else
 		{
 			GUILayout.Label("Waiting start of the game...");
+		}
+	}
+
+	private void Menu_Pause_Multi()
+	{
+
+	}
+
+	private void Menu_Pause_Solo()
+	{
+		if (GUILayout.Button("Resume"))
+		{
+			Time.timeScale = 1.0f;
+			this.state = MenuState.None;
+		}
+		if (GUILayout.Button("Restart"))
+		{
+			Application.LoadLevel(Application.loadedLevel);
+			this.state = MenuState.None;
+		}
+		if (GUILayout.Button("Main Menu"))
+		{
+			Application.LoadLevel("Menu");
+			this.state = MenuState.None;
 		}
 	}
 	#endregion // GUI
