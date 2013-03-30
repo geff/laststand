@@ -34,7 +34,10 @@ public class BaseBehaviour : MonoBehaviour {
         if (vh != null)
         {
             vh.TakeDamage(data.damage);
-            vh.networkView.RPC("TakeDamage", RPCMode.Others, data.damage);
+			if (Network.isClient || Network.isServer)
+			{
+            	vh.networkView.RPC("TakeDamage", RPCMode.Others, data.damage);
+			}
         }
         Destroy(gameObject);
     }

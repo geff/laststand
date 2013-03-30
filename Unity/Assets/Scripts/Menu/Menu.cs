@@ -361,15 +361,15 @@ public class Menu : MonoBehaviour
 			switch (this.m_context.player.lastTankType)
 			{
 			case TankType.Light:
-				playerTank = (VehicleController) this.m_assetHolder.lightTank;
+				playerTank = this.m_assetHolder.lightTank;
 				break;
 
 			case TankType.Medium:
-				playerTank = (VehicleController) this.m_assetHolder.mediumTank;
+				playerTank = this.m_assetHolder.mediumTank;
 				break;
 
 			case TankType.Heavy:
-				playerTank = (VehicleController) this.m_assetHolder.heavyTank;
+				playerTank = this.m_assetHolder.heavyTank;
 				break;
 			}
 			this.m_context.player.playerTank = playerTank;

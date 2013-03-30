@@ -45,20 +45,33 @@ public class EntryPoint : MonoBehaviour
 			// Go to the menu
 			Application.LoadLevel("Menu");
 			break;
+
 		case SceneMode.Menu:
 			// Play the menu background music
 			singleton.context.PlayAmbiance( singleton.assetHolder.menuMusic );
 			// Enable the menu
 			singleton.menu.state = MenuState.Login;
 			break;
+
 		case SceneMode.Fight:
 			// Play the in-game background music
 			singleton.context.PlayAmbiance( singleton.assetHolder.inGameMusic );
-			// Get the game state
-			singleton.gameState = GetComponent<GameState>();
+			// Add the game state
+			switch (singleton.context.gameMode)
+			{
+			case GameMode.Multi:
+				singleton.gameState = gameObject.AddComponent<MultiGameState>();
+				break;
+
+			default:
+			case GameMode.Solo:
+				singleton.gameState = gameObject.AddComponent<SoloGameState>();
+				break;
+			}
 			// Disable the menu
 			singleton.menu.state = MenuState.None;
 			break;
+
 		case SceneMode.Loading:
 			break;
 		default:

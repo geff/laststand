@@ -41,7 +41,7 @@ public class GameSingleton : MonoBehaviour
 		get;
 		private set;
 	}
-	public GameState gameState;
+	public AbstractGameState gameState;
 	public Menu menu
 	{
 		get;

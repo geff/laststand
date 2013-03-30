@@ -2,92 +2,24 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[AddComponentMenu("Last Stand/Core/Game State")]
+[AddComponentMenu("Last Stand/Core/Multi Game State")]
 /// <summary>
 /// This class holds the current state of the game.
 /// The state is dependent on the current level.
 /// </summary>
 [RequireComponent(typeof(NetworkView))]
-public class GameState : MonoBehaviour
+public class MultiGameState : AbstractGameState
 {
-	public enum Phase
-	{
-		Idle,
-		Initialization,
-		CountDown,
-		Fighting,
-		EndOfFight,
-		Results,
-	}
-	public Phase currentPhase = Phase.Initialization;
-
-	private GameContext m_context;
-	private Arena m_arena;
     private HashSet<int> m_synchronizedClients;
 
-    [HideInInspector]
-    public string countDown = "";
-    [HideInInspector]
-    public string message = "";
-
-	void Awake()
-    {
-		// Cache references
-		this.m_context = GameSingleton.Instance.context;
-		this.m_arena = (Arena) GameObject.FindObjectOfType(typeof(Arena));
+	protected override void Awake()
+	{
+		base.Awake();
 		this.m_synchronizedClients = new HashSet<int>();
 	}
 
-	IEnumerator Start()
-	{
-		// Wait one frame, so that everything else is properly initialized
-		yield return null;
-
-		// Start the finite state machine
-		StartCoroutine(FSM());
-	}
-
-    /// <summary>
-    /// State Machine entry point, acts as a state scheduler
-    /// </summary>
-    /// <returns></returns>
-	IEnumerator FSM()
-	{
-        /// Execute the current coroutine (State)
-        while (true)
-        {
-			switch (this.currentPhase)
-			{
-			default:
-			case Phase.Idle:
-				yield return StartCoroutine(State_Idle());
-				break;
-			case Phase.Initialization:
-				yield return StartCoroutine(State_Initialization());
-				break;
-			case Phase.CountDown:
-				yield return StartCoroutine(State_CountDown());
-				break;
-			case Phase.Fighting:
-				yield return StartCoroutine(State_Fighting());
-				break;
-			case Phase.EndOfFight:
-				yield return StartCoroutine(State_EndOfFight());
-				break;
-			case Phase.Results:
-				yield return StartCoroutine(State_Results());
-				break;
-			}
-        }
-	}
-
 	#region Phases
-	IEnumerator State_Idle()
-	{
-		yield break;
-	}
-
-	IEnumerator State_Initialization()
+	protected override IEnumerator State_Initialization()
 	{
         /// Entering warmup state
         Debug.Log("State_Initialization");
@@ -111,47 +43,14 @@ public class GameState : MonoBehaviour
             StartCoroutine(StartFight((float) Network.time + 2.0f));
 		}
 
-		while (this.currentPhase == Phase.Initialization)
+		while (base.currentPhase == Phase.Initialization)
 		{
 			// Wait for state to change
 			yield return null;
 		}
 	}
 
-	IEnumerator State_CountDown()
-	{
-		float seconds = 3;
-        while (seconds > 0)
-        {
-            // update GUI string
-            countDown = seconds.ToString();
-            --seconds;
-            yield return new WaitForSeconds(1.0f);
-        }
-        
-        countDown = "";
-
-		this.currentPhase = Phase.Fighting;
-	}
-
-	IEnumerator State_Fighting()
-	{
-		// Give control back to players
-		this.m_context.player.playerTank.SetPlayerControl(true);
-		Transform playerTransform = this.m_context.player.playerTank.transform;
-
-		while (this.currentPhase == Phase.Fighting)
-		{
-			if (this.m_context.player.playerTank.Life <= 0 || playerTransform.position.y < -10.0f)
-			{
-				Camera.main.GetComponent<SmoothFollow>().target = null;
-				this.currentPhase = Phase.EndOfFight;
-			}
-			yield return null;
-		}
-	}
-
-	IEnumerator State_EndOfFight()
+	protected override IEnumerator State_EndOfFight()
 	{
 		networkView.RPC("DieHard3", RPCMode.Others, Network.player);
 		yield return StartCoroutine(DieHard(Network.player));
@@ -159,34 +58,20 @@ public class GameState : MonoBehaviour
 		if (Network.isClient)
 		{
 			Network.Disconnect();
-			this.currentPhase = Phase.Results;
+			base.currentPhase = Phase.Results;
 			yield break;
 		}
 		else
 		{
 			// Remove the player from everywhere
-			this.m_context.networkView.RPC("RemovePlayer", RPCMode.Others, Network.player);
+			base.m_context.networkView.RPC("RemovePlayer", RPCMode.Others, Network.player);
 			Network.Destroy(this.m_context.player.playerTank.gameObject);
-			this.m_context.player.playerTank = null;
+			base.m_context.player.playerTank = null;
 
-			while (this.currentPhase == Phase.EndOfFight)
+			while (base.currentPhase == Phase.EndOfFight)
 			{
 				yield return null;
 			}
-		}
-	}
-
-	IEnumerator State_Results()
-	{
-		while (this.currentPhase == Phase.Results)
-		{
-			if (Network.isServer && Network.connections.Length < 2)
-			{
-				this.currentPhase = Phase.Idle;
-				Network.Disconnect();
-				yield break;
-			}
-			yield return null;
 		}
 	}
 	#endregion // Phases
@@ -196,7 +81,7 @@ public class GameState : MonoBehaviour
 	IEnumerator StartFight(float rendezvous)
 	{
         // Re-initialize player in case all clients did not receive it
-        this.m_context.player.playerTank.networkView.RPC("InitializeController", RPCMode.Others, Network.player);
+        base.m_context.player.playerTank.networkView.RPC("InitializeController", RPCMode.Others, Network.player);
         yield return null;
 
         Debug.Log("StartFight: rendezvous = " + rendezvous);
@@ -209,8 +94,8 @@ public class GameState : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
         }
-        this.currentPhase = Phase.CountDown;
-		this.m_context.player.currentState = PlayerState.Playing;
+        base.currentPhase = Phase.CountDown;
+		base.m_context.player.currentState = PlayerState.Playing;
 	}
 	#endregion // Event Handlers
 
@@ -221,9 +106,9 @@ public class GameState : MonoBehaviour
 	IEnumerator SpawnPlayer()
 	{
 		Transform spawn = this.transform;
-		if (this.m_arena != null)
+		if (base.m_arena != null)
 		{
-			spawn = this.m_arena.spawnPoints[this.m_context.player.playerID];
+			spawn = base.m_arena.spawnPoints[base.m_context.player.playerID];
 		}
 
 		VehicleController playerTank = null;
@@ -232,9 +117,9 @@ public class GameState : MonoBehaviour
 		{
 			// Instantiate a new object for this player, remember
             // static function Instantiate (prefab : Object, position : Vector3, rotation : Quaternion, group : int) : Object
-            playerTank = (VehicleController) Network.Instantiate(this.m_context.player.playerTank, spawn.position, Quaternion.identity, 0);
+            playerTank = (VehicleController) Network.Instantiate(base.m_context.player.playerTank, spawn.position, Quaternion.identity, 0);
 			// Replace the prefab reference with the instantiated tank
-            this.m_context.player.playerTank = playerTank;
+            base.m_context.player.playerTank = playerTank;
 			// Wait two frames (basically, wait for Awake and Start method to be called on the instantiated prefab)
             yield return null;
             yield return null;
@@ -245,9 +130,9 @@ public class GameState : MonoBehaviour
 		{
 			// Instantiate a new object for this player, remember
             // static function Instantiate (prefab : Object, position : Vector3, rotation : Quaternion, group : int) : Object
-            playerTank = (VehicleController) Instantiate(this.m_context.player.playerTank, spawn.position, Quaternion.identity);
+            playerTank = (VehicleController) Instantiate(base.m_context.player.playerTank, spawn.position, Quaternion.identity);
 			// Replace the prefab reference with the instantiated tank
-            this.m_context.player.playerTank = playerTank;
+            base.m_context.player.playerTank = playerTank;
 			// Wait two frames (basically, wait for Awake and Start method to be called on the instantiated prefab)
             yield return null;
             yield return null;
@@ -273,12 +158,12 @@ public class GameState : MonoBehaviour
 		Transform t = null;
 		if (owner == Network.player)
 		{
-			t = this.m_context.player.playerTank.transform;
+			t = base.m_context.player.playerTank.transform;
 		}
 		else
 		{
 			PlayerData data;
-			if( this.m_context.playerList.TryGetValue(owner.GetHashCode(), out data))
+			if( base.m_context.playerList.TryGetValue(owner.GetHashCode(), out data))
 			{
 				t = data.playerTank.transform;
 			}

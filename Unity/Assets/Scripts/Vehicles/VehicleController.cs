@@ -59,7 +59,10 @@ public class VehicleController : MonoBehaviour
             if (capacity.enabled && (Time.time - capacity.LastActivity) > capacity.CoolDown && Input.GetKey(key) && capacity.enabled)
             {
                 capacity.ApplyCapacity();
-				networkView.RPC("DoAction", RPCMode.Others, key);
+				if (Network.isClient || Network.isServer)
+				{
+					networkView.RPC("DoAction", RPCMode.Others, key);
+				}
             }
         }
     }

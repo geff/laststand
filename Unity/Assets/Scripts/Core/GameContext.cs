@@ -2,10 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum GameMode
+{
+	Solo,
+	Multi
+}
+
 [AddComponentMenu("Last Stand/Core/Game Context")]
 [RequireComponent(typeof(NetworkView))]
 public class GameContext : MonoBehaviour
 {
+	public GameMode gameMode = GameMode.Solo;
+
 	#region Audio
 	internal const int AUDIOSRC_AMB = 0;
 	internal const int AUDIOSRC_SFX = 0;
@@ -21,12 +29,20 @@ public class GameContext : MonoBehaviour
 	#region Players
 	public PlayerData player {
 		get {
-			PlayerData tmp;
-			if (this.playerList.TryGetValue (Network.player.GetHashCode (), out tmp)) {
-				return tmp;
-			}
+			switch (this.gameMode)
+			{
+			case GameMode.Multi:
+				PlayerData tmp;
+				if (this.playerList.TryGetValue (Network.player.GetHashCode (), out tmp)) {
+					return tmp;
+				}
+	
+				return PlayerData.INVALID;
 
-			return PlayerData.INVALID;
+			default:
+			case GameMode.Solo:
+				return this.tempPlayer;
+			}
 		}
 	}
 
@@ -46,7 +62,7 @@ public class GameContext : MonoBehaviour
 	void Awake ()
 	{
 		// Initialize the master server
-#if true
+#if false
         MasterServer.ipAddress = GameContext.MASTER_SERVER_IP_ADDRESS;
         MasterServer.port = GameContext.MASTER_SERVER_PORT;
         Network.natFacilitatorIP = GameContext.MASTER_SERVER_IP_ADDRESS;
@@ -56,8 +72,9 @@ public class GameContext : MonoBehaviour
 		MasterServer.ClearHostList ();
 		MasterServer.RequestHostList (GameContext.GAME_TYPE_NAME);
 
-		// Initialize
+		// Initialize players
 		this.playerList = new Dictionary<int, PlayerData> (8);
+		this.tempPlayer = new PlayerData();
 
 		DontDestroyOnLoad (this);
 		networkView.group = 1;
@@ -358,6 +375,8 @@ public class GameContext : MonoBehaviour
 
 	internal void StartLevel ()
 	{
+		// FIXME: game mode
+		this.gameMode = GameMode.Multi;
 		if (Network.isClient) {
 			return;
 		}
@@ -391,22 +410,28 @@ public class GameContext : MonoBehaviour
 	void Ready (NetworkMessageInfo info)
 	{
 		PlayerData player;
-		if (this.playerList.TryGetValue (info.sender.GetHashCode (), out player)) {
+		if (this.playerList.TryGetValue (info.sender.GetHashCode (), out player))
+		{
 			player.currentState = PlayerState.Ready;
 			Debug.Log (string.Format ("[Ready]: {0}", player.username));
-		} else {
+		}
+		else
+		{
 			Debug.LogError ("[Ready]: unknown player");
 		}
 	}
 
 	[RPC]
-	void TankChoice (int tankID, NetworkPlayer sender)
+	void TankChoice(int tankID, NetworkPlayer sender)
 	{
 		PlayerData player;
-		if (this.playerList.TryGetValue (sender.GetHashCode (), out player)) {
+		if (this.playerList.TryGetValue (sender.GetHashCode(), out player))
+		{
 			player.lastTankType = (TankType)tankID;
 			Debug.Log (string.Format ("[TankChoice]: {0}", player.lastTankType.ToString ()));
-		} else {
+		}
+		else
+		{
 			Debug.LogError ("[TankChoice]: unknown player");
 		}
 	}
