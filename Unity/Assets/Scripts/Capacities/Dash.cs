@@ -3,11 +3,12 @@ using System.Collections;
 
 public class Dash : BaseCapacity
 {
+    public float Factor = 1f;
+
     public Dash()
     {
-        this.CapacityName = "Dash";
-        this.Key = "&";
-        this.CoolDown = 3f;
+        this.Key = KeyCode.Mouse1;
+        this.CoolDown = 12f;
         this.AnimationName = "";
     }
 
@@ -15,6 +16,6 @@ public class Dash : BaseCapacity
     {
         base.ApplyCapacity();
         //TODO : code du Dash
-		this.ParentVehicle.rigidbody.AddForce(500000f, 0f, 0f, ForceMode.Force);
+		this.ParentVehicle.rigidbody.AddForce(this.ParentVehicle.transform.forward * 500000f * this.Factor , ForceMode.Force);
     }
 }

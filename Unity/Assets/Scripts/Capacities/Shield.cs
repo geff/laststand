@@ -1,15 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
-public class Shield : MonoBehaviour {
+public class Shield : BaseCapacity
+{
+    public Shield()
+    {
+        this.Key = KeyCode.E;
+        this.CoolDown = 3f;
+        this.AnimationName = "";
+    }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public override void ApplyCapacity()
+    {
+        base.ApplyCapacity();
+    }
 }

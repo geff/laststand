@@ -7,6 +7,7 @@ public class GrenadeBehaviour : MonoBehaviour
     private Transform myTransform;
     public ZoneWeaponData data;
     public Detonator explosion;
+    public AudioClip SoundExplosion;
 
     private float startTime;
 
@@ -37,6 +38,11 @@ public class GrenadeBehaviour : MonoBehaviour
 
     void Explode()
     {
+        if (SoundExplosion != null)
+        {
+            AudioSource.PlayClipAtPoint(SoundExplosion, myTransform.position, 1);
+        }
+
         Instantiate(explosion, myTransform.position, myTransform.rotation);
         Destroy(gameObject);
     }
