@@ -9,6 +9,12 @@ using System.Collections;
 public class SoloGameState : AbstractGameState
 {
 
+	protected override void Awake()
+	{
+		base.Awake();
+		Destroy(this.networkView);
+	}
+
 	#region Phases
 	protected override IEnumerator State_Initialization()
 	{
