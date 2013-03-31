@@ -16,6 +16,6 @@ public class Dash : BaseCapacity
     {
         base.ApplyCapacity();
         //TODO : code du Dash
-		this.ParentVehicle.rigidbody.AddForce(this.ParentVehicle.transform.forward * 500000f * this.Factor , ForceMode.Force);
+		this.ParentVehicle.rigidbody.AddForce(this.ParentVehicle.transform.forward * 5000f * this.Factor , ForceMode.Force);
     }
 }
