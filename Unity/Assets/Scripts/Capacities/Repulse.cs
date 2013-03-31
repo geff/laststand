@@ -19,7 +19,6 @@ public class Repulse : BaseCapacity
                 //direction.y = 0;
                 direction.Normalize();
                 vh.rigidbody.AddForce(direction * Force);
-                Debug.Log("distance=" + Vector3.Distance(vh.transform.position, ParentVehicle.transform.position) + " force=" + direction * Range);
             }
         }
     }
