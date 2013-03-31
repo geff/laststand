@@ -65,7 +65,7 @@ public class VehicleController : MonoBehaviour
                 capacity.ApplyCapacity();
 				if (Network.isClient || Network.isServer)
 				{
-					networkView.RPC("DoAction", RPCMode.Others, key);
+					networkView.RPC("DoAction", RPCMode.Others, (int)key);
 				}
             }
         }
@@ -127,10 +127,10 @@ public class VehicleController : MonoBehaviour
     }
 
     [RPC]
-    internal void DoAction(KeyCode key)
+    internal void DoAction(int key)
     {
         BaseCapacity capacity;
-        if (this.capacities.TryGetValue(key, out capacity))
+        if (this.capacities.TryGetValue((KeyCode) key, out capacity))
         {
             // FIXME: synchronize network time
             if (capacity.enabled)
