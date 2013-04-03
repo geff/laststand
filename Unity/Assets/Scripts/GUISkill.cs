@@ -31,7 +31,7 @@ public class GUISkill {
 		} else {
 //			Debug.Log("ABCABCABC");
 			GUI.Label (new Rect (positionX, positionY, width, height), this.capa.GUIPicture);		
-			int result = (int)Mathf.Clamp(width * (1.0f - getPercentage()), 0, width-7);
+			int result = (int)Mathf.Clamp((width-7) * (1.0f - getPercentage()), 0, width-7);
 //			Debug.Log("result width=" + result);
 			Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
 			Hud.drawRectangle(overlay, new Rect(positionX, positionY+4, result, height-8));
