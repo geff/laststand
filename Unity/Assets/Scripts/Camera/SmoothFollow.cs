@@ -62,5 +62,17 @@ public class SmoothFollow : MonoBehaviour
             // Always look at the target
             transform.LookAt(target);
         }
+
+		// Adapt the outline shader thickness in [0.002;0.004] (1-percentage) * (max - min) + min
+		foreach (VehicleController vh in GameObject.FindObjectsOfType(typeof(VehicleController)))
+			vh.SetOutlineThickness((1-ZoomPercentage) * 0.002f + 0.002f);
     }
+
+	public float ZoomPercentage
+	{
+		get
+		{
+			return (this.height - zoomCurve.Evaluate(-1)) / (zoomCurve.Evaluate(1) - zoomCurve.Evaluate(-1));
+		}
+	}
 }

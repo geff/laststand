@@ -10,11 +10,15 @@ public class VehicleController : MonoBehaviour
 
     public int Life;
     public int MaxLife;
+	public float MinSidewayFriction = 20;
+	public float MaxSidewayFriction = 400;
 
     private PlayerCar m_car;
     public bool IsDebug = false;
 
     private WheelCollider[] wheelColliders;
+
+	private List<Material> toonOutlineShaders;
 
     void Awake()
     {
@@ -33,6 +37,17 @@ public class VehicleController : MonoBehaviour
         {
             this.capacities.Add(capacity.Key, capacity);
         }
+
+		toonOutlineShaders = new List<Material>();
+		foreach (Renderer r in GetComponentsInChildren<Renderer>())
+		{
+			foreach (Material m in r.materials)
+			{
+				if (m.HasProperty("_Outline")) // only add the outline shaders
+					toonOutlineShaders.Add(m);
+			}
+		}
+		Debug.Log("Found " + toonOutlineShaders.Count + " outline shaders.");
     }
 
     void Start()
@@ -71,6 +86,14 @@ public class VehicleController : MonoBehaviour
         }
     }
 
+	public void SetOutlineThickness(float value)
+	{
+		foreach (Material m in toonOutlineShaders)
+		{
+			m.SetFloat("_Outline", value);
+		}
+	}
+
    /* public void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.tag != "Ground")
@@ -103,7 +126,7 @@ public class VehicleController : MonoBehaviour
             foreach(WheelCollider wc in wheelColliders)
             {
                 sidewayFriction = wc.sidewaysFriction;
-                sidewayFriction.extremumValue = Mathf.Lerp(20, 400, fPassed);
+                sidewayFriction.extremumValue = Mathf.Lerp(MinSidewayFriction,MaxSidewayFriction, fPassed);
                 wc.sidewaysFriction = sidewayFriction;
             }
             fPassed = (Time.time - fStart) / Mathf.Abs(transform.InverseTransformDirection(rigidbody.velocity).x)*0.5f;

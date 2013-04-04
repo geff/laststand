@@ -36,7 +36,6 @@ public class Hud : MonoBehaviour
 			var style = new GUIStyle();
 			style.fontSize = 350;
 			style.normal.textColor = Color.white;
-			Debug.Log ("hqaha:" + style.fontSize);
 			GUI.Label(screenCenterLabel, GameSingleton.Instance.gameState.countDown, style);
 		}
 		
