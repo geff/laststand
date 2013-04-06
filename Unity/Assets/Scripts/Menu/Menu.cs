@@ -51,6 +51,8 @@ public class Menu : MonoBehaviour
 
 	void Start()
 	{
+		Debug.Log("Menu.Start()");
+
 		this.sUsername = "";
 		// Get the asset holder and cache the reference
 		this.m_assetHolder = GameSingleton.Instance.assetHolder;
@@ -60,6 +62,8 @@ public class Menu : MonoBehaviour
 
 	void OnDestroy()
 	{
+		Debug.Log("Menu.OnDestroy()");
+
 		this.m_assetHolder = null;
 		this.m_context= null;
 		this.selectedHost = null;
@@ -263,8 +267,8 @@ public class Menu : MonoBehaviour
 			if (this.nConnectPort > 0 && this.nMaxPlayerNumber > 1 && GUILayout.Button("Create!"))
 			{
 				// Start a server for playerMaxNumber clients using the "connectPort" given via the GUI
-//                bool useNat = !Network.HavePublicAddress();
-                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, false);
+                bool useNat = !Network.HavePublicAddress();
+                NetworkConnectionError error = Network.InitializeServer(Mathf.Clamp(this.nMaxPlayerNumber, 2, 8), nConnectPort, useNat);
 
                 if (string.IsNullOrEmpty(this.sGameName))
                 {

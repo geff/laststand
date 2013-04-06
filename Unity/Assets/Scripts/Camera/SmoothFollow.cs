@@ -21,8 +21,17 @@ public class SmoothFollow : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+		Debug.Log("SmoothFollow.Start()");
 
     }
+
+	void OnDestroy()
+	{
+		Debug.Log("SmoothFollow.OnDestroy()");
+		
+		// Free references
+		this.target = null;
+	}
 
     // Update is called once per frame
     void Update()

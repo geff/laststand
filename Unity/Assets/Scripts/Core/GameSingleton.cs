@@ -6,7 +6,7 @@ using System.Collections;
 [RequireComponent(typeof(Menu))]
 public class GameSingleton : MonoBehaviour
 {
-	public static GameSingleton Instance
+	internal static GameSingleton Instance
 	{
 		get
 		{
@@ -26,23 +26,23 @@ public class GameSingleton : MonoBehaviour
 	}
 	private static GameSingleton s_instance = null;
 
-	public AssetHolder assetHolder
+	internal AssetHolder assetHolder
 	{
 		get;
 		private set;
 	}
-	public GameConfig config
+	internal GameConfig config
 	{
 		get;
 		private set;
 	}
-	public GameContext context
+	internal GameContext context
 	{
 		get;
 		private set;
 	}
-	public AbstractGameState gameState;
-	public Menu menu
+	internal AbstractGameState gameState;
+	internal Menu menu
 	{
 		get;
 		private set;
@@ -50,6 +50,8 @@ public class GameSingleton : MonoBehaviour
 	
 	void Awake()
 	{
+		Debug.Log("GameSingleton.Awake()");
+
 		// Get the game config.
 		this.config = (GameConfig) Resources.Load("GameConfig", typeof(GameConfig));
 		// Get the game context.
@@ -62,12 +64,16 @@ public class GameSingleton : MonoBehaviour
 	
 	void Start()
 	{
+		Debug.Log("GameSingleton.Start()");
+
 		// Nothing to do.
 		// Need to kept this method to ensure OnDestroy() will be called upon destruction.
 	}
 	
 	void OnDestroy()
 	{
+		Debug.Log("GameSingleton.OnDestroy()");
+
 		// Release references
 		this.config = null;
 		this.context = null;

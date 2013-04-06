@@ -17,6 +17,8 @@ public class EntryPoint : MonoBehaviour
 
 	void Awake()
 	{
+		Debug.Log("EntryPoint.Awake()");
+
 		// Get the game singleton to make sure it is initialized here in the first scene
 		GameSingleton singleton = GameSingleton.Instance;
 	}
@@ -26,6 +28,8 @@ public class EntryPoint : MonoBehaviour
 	
 	IEnumerator Start()
 	{
+		Debug.Log("EntryPoint.Start()");
+		
 		// Get the game singleton
 		GameSingleton singleton = GameSingleton.Instance;
 
@@ -83,7 +87,10 @@ public class EntryPoint : MonoBehaviour
 	{
 		if (this.bShowMessage)
 		{
+			GUILayout.BeginVertical();
 			GUILayout.Label(this.sMessage);
+			GUILayout.Label("Second message");
+			GUILayout.EndVertical();
 		}
 	}
 	

@@ -24,6 +24,8 @@ public abstract class AbstractGameState : MonoBehaviour
 
 	protected virtual void Awake()
     {
+		Debug.Log("AbstractGameState.Awake()");
+
 		// Cache references
 		this.m_context = GameSingleton.Instance.context;
 		this.m_arena = (Arena) GameObject.FindObjectOfType(typeof(Arena));
@@ -31,6 +33,8 @@ public abstract class AbstractGameState : MonoBehaviour
 
 	IEnumerator Start()
 	{
+		Debug.Log("AbstractGameState.Start()");
+
 		// Wait one frame, so that everything else is properly initialized
 		yield return null;
 

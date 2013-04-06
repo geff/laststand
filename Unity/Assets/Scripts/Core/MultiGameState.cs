@@ -14,6 +14,8 @@ public class MultiGameState : AbstractGameState
 
 	protected override void Awake()
 	{
+		Debug.Log("MultiGameState.Awake()");
+
 		base.Awake();
 		this.m_synchronizedClients = new HashSet<int>();
 	}

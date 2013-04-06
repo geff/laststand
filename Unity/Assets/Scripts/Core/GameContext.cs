@@ -1,3 +1,5 @@
+//#define CUSTOM_MASTER_SERVER
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,9 +53,11 @@ public class GameContext : MonoBehaviour
 	#endregion // Players
 
 	#region Const Master Server Values
+#if CUSTOM_MASTER_SERVER
 	internal const string MASTER_SERVER_IP_ADDRESS = "10.45.12.93";
 	internal const int MASTER_SERVER_PORT = 23466;
 	internal const int NAT_FACILITATOR_PORT = 50005;
+#endif
 	internal const string GAME_TYPE_NAME = "LastStand_Multi";
     #endregion
 
@@ -61,8 +65,10 @@ public class GameContext : MonoBehaviour
 
 	void Awake ()
 	{
+		Debug.Log("GameContext.Awake()");
+
 		// Initialize the master server
-#if false
+#if CUSTOM_MASTER_SERVER
         MasterServer.ipAddress = GameContext.MASTER_SERVER_IP_ADDRESS;
         MasterServer.port = GameContext.MASTER_SERVER_PORT;
         Network.natFacilitatorIP = GameContext.MASTER_SERVER_IP_ADDRESS;
@@ -90,8 +96,13 @@ public class GameContext : MonoBehaviour
 
 	void OnDestroy ()
 	{
+		Debug.Log("GameContext.OnDestroy()");
+
+		// Free references
 		this.audioListener = null;
 		this.m_bgmAudioSourceArray = null;
+		this.playerList = null;
+		this.tempPlayer = null;
 	}
 
 	void OnLevelWasLoaded (int level)

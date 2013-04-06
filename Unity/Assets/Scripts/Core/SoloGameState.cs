@@ -11,6 +11,8 @@ public class SoloGameState : AbstractGameState
 
 	protected override void Awake()
 	{
+		Debug.Log("SoloGameState.Awake()");
+
 		base.Awake();
 		Destroy(this.networkView);
 	}

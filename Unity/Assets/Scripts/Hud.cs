@@ -5,8 +5,10 @@ using System.Collections.Generic;
 public class Hud : MonoBehaviour
 {
 	public const int capacityWidth = 50; // The width of the capacity button/texture2D to be displayed in the HUD	
-	public void Start() {
-		Debug.Log("HUD::Start()");
+	public void Start()
+	{
+		Debug.Log("Hud.Start()");
+
 		int i = 0;
 		foreach (BaseCapacity capa in GameSingleton.Instance.context.player.playerTank.GetComponents<BaseCapacity>()) {
 			GUISkill gsk = new GUISkill();
@@ -19,7 +21,8 @@ public class Hud : MonoBehaviour
 
 	private IList<GUISkill> skills = new List<GUISkill>();
 	
-	public void OnGUI () {
+	public void OnGUI()
+	{
 		PlayerData player = GameSingleton.Instance.context.player;
 		// Cannot display HUD before player is at least in 'Playing' state
 		if (player.currentState < PlayerState.Playing)
@@ -71,14 +74,16 @@ public class Hud : MonoBehaviour
 	public int alivePlayersHeight = 45;
 	public int elementsMargin = 8; // in pixels
 	
-	private void dispAlivePlayers(int n_alive) {
+	private void dispAlivePlayers(int n_alive)
+	{
 		Color overlay = new Color(0, 0, 0, 0.7f);// transparent black
 		var pos = new Rect(Screen.width - elementsMargin - alivePlayersWidth, elementsMargin, alivePlayersWidth, alivePlayersHeight);
 		drawRectangle(overlay, pos);
 		GUI.Label(pos, "  " + n_alive + "\n joueur(s)");
 	}
 	
-	static public void drawRectangle(Color color, Rect r) {
+	static public void drawRectangle(Color color, Rect r)
+	{
 		Color backup = GUI.color;
 		GUI.color = color;
 		var unicolor = new Texture2D(1, 1);
